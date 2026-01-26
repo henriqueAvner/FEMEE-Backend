@@ -14,7 +14,12 @@ namespace FEMEE.Domain.Entities.Campeonatos
         public Fase Fase { get; set; }
         public int PlacarTimeA { get; set; }
         public int PlacarTimeB { get; set; }
-        public Status Status { get; set; }
+        public StatusPartida Status { get; set; }
         public string? TransmissaoUrl { get; set; }
+
+        public Campeonato? Campeonato { get; set; }
+        public Time? TimeA { get; set; }
+        public Time? TimeB { get; set; }
+        public Time? TimeVencedor { get; set; }
     }
 }

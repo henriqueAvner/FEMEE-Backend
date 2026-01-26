@@ -1,10 +1,10 @@
 namespace FEMEE.Domain.Enums
 {
-    public enum Status
+    public enum StatusJogador
     {
-        Ativo,
-        Inativo,
-        Pendente,
-        Cancelado
+        Ativo = 1,
+        Inativo = 2,
+        Suspenso = 3,
+        Aposentado = 4
     }
 }

@@ -21,5 +21,7 @@ namespace FEMEE.Domain.Entities.Principal
         public int Vizualizacoes { get; set; }
         public DateTime Publicada { get; set; }
 
+        public User? Autor { get; set; }
+
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FEMEE.Domain.Entities.Principal;
 
 namespace FEMEE.Domain.Entities.Campeonatos
 {
@@ -22,5 +23,11 @@ namespace FEMEE.Domain.Entities.Campeonatos
         public int PosicaoAnterior { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+
+        public ICollection<Jogador> Jogadores { get; set; } = new List<Jogador>();
+        public ICollection<Partida> PartidasCasaTeam { get; set; } = new List<Partida>();
+        public ICollection<Partida> PartidasVisitanteTeam { get; set; } = new List<Partida>();
+        public ICollection<InscricaoCampeonato> InscricoesCampeonatos { get; set; } = new List<InscricaoCampeonato>();
+        public ICollection<Conquista> Conquistas { get; set; } = new List<Conquista>();
     }
 }

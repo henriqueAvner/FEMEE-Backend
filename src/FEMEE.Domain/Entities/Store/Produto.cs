@@ -15,5 +15,8 @@ namespace FEMEE.Domain.Entities.Store
         public string? Categoria { get; set; }
         public int Estoque { get; set; }
         public bool Ativo { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

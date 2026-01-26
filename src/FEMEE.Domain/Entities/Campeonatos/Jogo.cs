@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FEMEE.Domain.Enums;
 
 namespace FEMEE.Domain.Entities.Campeonatos
 {
@@ -13,5 +10,9 @@ namespace FEMEE.Domain.Entities.Campeonatos
         public string? Descricao { get; set; }
         public string? ImagemUrl { get; set; }
         public bool Ativo { get; set; }
+
+        public CategoriaJogo CategoriaJogo { get; set; }
+
+        public ICollection<Campeonato> Campeonatos { get; set; } = new List<Campeonato>();
     }
 }

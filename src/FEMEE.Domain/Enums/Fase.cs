@@ -2,11 +2,10 @@ namespace FEMEE.Domain.Enums
 {
     public enum Fase
     {
-        Inicial,
-        Playoffs,
-        Oitavas,
-        Quartas,
-        Semifinais,
-        Final
+        Grupos = 1,
+        OitavasDeFinal = 2,
+        QuartasDeFinal = 3,
+        Semifinal = 4,
+        Final = 5
     }
 }
