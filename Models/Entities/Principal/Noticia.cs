@@ -15,9 +15,9 @@ namespace femee_api.Models.Entities
         public string? Resumo { get; set; }
         public string? Conteudo { get; set; }
         public string? Categoria { get; set; }
-        public string? Imagem_Url { get; set; }
-        public DateTime Data_Publicacao { get; set; }
-        public int Numero_Comentarios { get; set; }
+        public string? ImagemUrl { get; set; }
+        public DateTime DataPublicacao { get; set; }
+        public int NumeroComentarios { get; set; }
         public int Vizualizacoes { get; set; }
         public DateTime Publicada { get; set; }
 

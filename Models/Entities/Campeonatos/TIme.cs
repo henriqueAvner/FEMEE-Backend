@@ -11,16 +11,16 @@ namespace femee_api.Models.Entities
         public string? Nome { get; set; }
 
         public string? Slug { get; set; }
-        public string? Logo_Url { get; set; }
-        public DateTime Data_Fundacao { get; set; }
+        public string? LogoUrl { get; set; }
+        public DateTime DataFundacao { get; set; }
         public string? Descricao { get; set; }
         public int Vitorias { get; set; }
         public int Derrotas { get; set; }
         public int Empates { get; set; }
         public int Pontos { get; set; }
-        public int Posicao_ranking { get; set; }
-        public int Posicao_anterior { get; set; }
-        public DateTime Created_At { get; set; }
-        public DateTime Updated_At { get; set; }
+        public int PosicaoRanking { get; set; }
+        public int PosicaoAnterior { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

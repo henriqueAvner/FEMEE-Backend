@@ -8,11 +8,11 @@ namespace femee_api.Models.Entities.Campeonatos
     public class Inscricao_Campeonato
     {
         public int Id { get; set; }
-        public int Campeonato_Id { get; set; }
-        public int Time_Id { get; set; }
-        public int Capitao_Id { get; set; }
-        public DateTime Data_Inscricao { get; set; }
-        public string? Status_Inscricao { get; set; }
+        public int CampeonatoId { get; set; }
+        public int TimeId { get; set; }
+        public int CapitaoId { get; set; }
+        public DateTime DataInscricao { get; set; }
+        public string? StatusInscricao { get; set; }
         public string? Observacoes { get; set; }
     }
 }

@@ -9,22 +9,22 @@ namespace femee_api.Models.Entities
     {
         public int Id { get; set; }
         
-        public int Jogo_Id { get; set; }
+        public int JogoId { get; set; }
         public string? Titulo { get; set; }
         public string? Descricao { get; set; }
-        public DateTime Data_Inicio { get; set; }
-        public DateTime Data_Fim { get; set; }
-        public DateTime Data_Limite_Inscricao { get; set; }
+        public DateTime DataInicio { get; set; }
+        public DateTime DataFim { get; set; }
+        public DateTime DataLimiteInscricao { get; set; }
         public string? Local { get; set; }
 
         public string? Cidade { get; set; }
         public string? Estado { get; set; }
         public decimal Premiacao { get; set; }
-        public int Numero_Vagas { get; set; }
-        public int Numero_Inscritos { get; set; }
+        public int NumeroVagas { get; set; }
+        public int NumeroInscritos { get; set; }
         public Enums.Status Status { get; set; }
-        public string? Regulamento_Url { get; set; }
-        public DateTime Created_At { get; set; }
-        public DateTime Updated_At { get; set; }
+        public string? RegulamentoUrl { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

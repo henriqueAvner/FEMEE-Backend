@@ -8,13 +8,13 @@ namespace femee_api.Models.Entities.Principal
     public class Conquista
     {
         public int Id { get; set; }
-        public int Time_Id { get; set; }
+        public int TimeId { get; set; }
 
-        public int Campeonato_Id { get; set; }
+        public int CampeonatoId { get; set; }
         public string? Titulo { get; set; }
         public string? Descricao { get; set; }
         public int Posicao { get; set; }
-        public DateTime Data_Conquista { get; set; }
-        public string? Icone_Titulo { get; set; }
+        public DateTime DataConquista { get; set; }
+        public string? IconeTitulo { get; set; }
     }
 }
