@@ -10,7 +10,7 @@ namespace FEMEE.Domain.Enums
         
     }
 
-    public enum FuncaoJogadorCsgo
+    public enum FuncaoJogadorCs
     {
         EntryFragger = 1,
         Support = 2,
