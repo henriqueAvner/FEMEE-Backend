@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace femee_api.Models.Entities
+namespace FEMEE.Domain.Entities.Campeonatos
 {
     public class Time
     {

@@ -1,7 +1,7 @@
 
-using femee_api.Models.Enums;
+using FEMEE.Domain.Enums;
 
-namespace femee_api.Models.Entities.Principal
+namespace FEMEE.Domain.Entities.Principal
 {
     public class Jogador
     {

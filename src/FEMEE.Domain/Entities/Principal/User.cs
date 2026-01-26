@@ -1,4 +1,4 @@
-namespace femee_api.Models.Entities
+namespace FEMEE.Domain.Entities.Principal
 {
     public class User
     {

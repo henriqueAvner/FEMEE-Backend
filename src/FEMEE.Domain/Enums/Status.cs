@@ -1,4 +1,4 @@
-namespace femee_api.Models.Enums
+namespace FEMEE.Domain.Enums
 {
     public enum Status
     {

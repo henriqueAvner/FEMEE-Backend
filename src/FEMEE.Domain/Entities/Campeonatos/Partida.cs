@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using femee_api.Models.Enums;
+using FEMEE.Domain.Enums;
 
-namespace femee_api.Models.Entities.Campeonatos
+namespace FEMEE.Domain.Entities.Campeonatos
 {
     public class Partida
     {
