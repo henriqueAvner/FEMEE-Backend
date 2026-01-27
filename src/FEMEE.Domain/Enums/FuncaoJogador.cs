@@ -1,5 +1,13 @@
 namespace FEMEE.Domain.Enums
 {
+    public enum FuncaoJogador
+    {
+        Nenhum = 0,
+        Jogador = 1,
+        Capitao = 2
+        // Adicione outras funções genéricas se necessário
+    }
+
     public enum FuncaoJogadorLol
     {
         Top = 1,
@@ -7,7 +15,6 @@ namespace FEMEE.Domain.Enums
         Mid = 3,
         Adc = 4,
         Suporte = 5
-        
     }
 
     public enum FuncaoJogadorCs
@@ -18,5 +25,4 @@ namespace FEMEE.Domain.Enums
         AWPer = 4,
         InGameLeader = 5
     }
-    
 }

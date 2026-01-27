@@ -1,29 +1,26 @@
 
+using System.ComponentModel.DataAnnotations;
 using FEMEE.Domain.Entities.Campeonatos;
 using FEMEE.Domain.Enums;
 
 namespace FEMEE.Domain.Entities.Principal
 {
-    public class Jogador
+    public class Jogador : User
     {
-        public int Id { get; set; }
-
-        public int UserId { get; set; }
-        public int TimeId { get; set; }
-
+        [Required]
+        [MaxLength(256)]
         public string? NickName { get; set; }
 
-        public string? NomeCompleto { get; set; }
-        public string? Funcao { get; set; }
+        [Required]
+        public FuncaoJogador Funcao { get; set; }
         public DateTime DataEntradaTime { get; set; }
         public DateTime DataSaidaTime { get; set; }
+
         public StatusJogador Status { get; set; }
 
         public int FuncaoJogador { get; set; }
-        public int JogoId { get; set; }
-
-        public User? User { get; set; }
         public Time? Time { get; set; }
+        public int TimeId {get; set;}
     }
 }
 
