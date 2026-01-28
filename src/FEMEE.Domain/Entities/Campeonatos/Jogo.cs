@@ -24,7 +24,7 @@ namespace FEMEE.Domain.Entities.Campeonatos
         public string? ImagemUrl { get; set; }
         [Column("ATIVO")]
         public bool Ativo { get; set; }
-
+        [Column("CATEGORIA_JOGO")]
         public CategoriaJogo CategoriaJogo { get; set; }
 
         public ICollection<Campeonato> Campeonatos { get; set; } = new List<Campeonato>();

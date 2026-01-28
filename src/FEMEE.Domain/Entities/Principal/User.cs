@@ -33,7 +33,7 @@ namespace FEMEE.Domain.Entities.Principal
 
         [Column("DATA_ATUALIZACAO")]
         public DateTime DataAtualizacao { get; set; }
-
+        [Column("TIPO_USUARIO")]
         public TipoUsuario TipoUsuario { get; set; }
 
         public ICollection<Noticia>? Noticias { get; set; } = new List<Noticia>();

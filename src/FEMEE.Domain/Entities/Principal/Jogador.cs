@@ -22,7 +22,6 @@ namespace FEMEE.Domain.Entities.Principal
         public DateTime DataSaidaTime { get; set; }
         [Column("STATUS")]
         public StatusJogador Status { get; set; }
-        [Column("TIME")]
         public Time? Time { get; set; }
         [Column("TIME_ID")]
         public int TimeId {get; set;}
