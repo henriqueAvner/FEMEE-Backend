@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using FEMEE.Domain.Entities.Campeonatos;
 using FEMEE.Domain.Enums;
 
@@ -11,17 +12,26 @@ namespace FEMEE.Domain.Entities.Principal
 
         [MaxLength(256)]
         [Required]
+        [Column("USUARIO")]
         public string? Nome { get; set; }
         [Required]
         [MaxLength(256)]
+        [Column("EMAIL")]
         public string? Email { get; set; }
 
         [Required]
+        [Column("SENHA")]
+        [MaxLength(10)]
+        [MinLength(6)]
         public string? Senha { get; set; }
         [MaxLength(20)]
         [Required]
+        [Column("TELEFONE")]
         public string? Telefone { get; set; }
+        [Column("DATA_CRIACAO")]
         public DateTime DataCriacao { get; set; }
+
+        [Column("DATA_ATUALIZACAO")]
         public DateTime DataAtualizacao { get; set; }
 
         public TipoUsuario TipoUsuario { get; set; }
