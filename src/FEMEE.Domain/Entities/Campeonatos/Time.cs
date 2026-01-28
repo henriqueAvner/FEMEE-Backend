@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using FEMEE.Domain.Entities.Principal;
@@ -8,12 +9,18 @@ namespace FEMEE.Domain.Entities.Campeonatos
 {
     public class Time
     {
+        [Key]
         public int Id { get; set; }
+        [Required]
+        [MaxLength(256)]
         public string? Nome { get; set; }
-
+        [Required]
+        [MaxLength(256)]
         public string? Slug { get; set; }
+        [MaxLength(512)]
         public string? LogoUrl { get; set; }
         public DateTime DataFundacao { get; set; }
+        [MaxLength(1000)]
         public string? Descricao { get; set; }
         public int Vitorias { get; set; }
         public int Derrotas { get; set; }
