@@ -1,5 +1,6 @@
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using FEMEE.Domain.Entities.Campeonatos;
 using FEMEE.Domain.Enums;
 
@@ -9,17 +10,21 @@ namespace FEMEE.Domain.Entities.Principal
     {
         [Required]
         [MaxLength(256)]
+        [Column("NICKNAME")]
         public string? NickName { get; set; }
 
         [Required]
+        [Column("FUNCAO")]
         public FuncaoJogador Funcao { get; set; }
+        [Column("DATA_ENTRADA_TIME")]
         public DateTime DataEntradaTime { get; set; }
+        [Column("DATA_SAIDA_TIME")]
         public DateTime DataSaidaTime { get; set; }
-
+        [Column("STATUS")]
         public StatusJogador Status { get; set; }
-
-        public int FuncaoJogador { get; set; }
+        [Column("TIME")]
         public Time? Time { get; set; }
+        [Column("TIME_ID")]
         public int TimeId {get; set;}
     }
 }
