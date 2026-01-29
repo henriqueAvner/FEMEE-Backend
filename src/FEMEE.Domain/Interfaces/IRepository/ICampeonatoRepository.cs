@@ -13,9 +13,11 @@ namespace FEMEE.Domain.Interfaces
 
         Task<IEnumerable<Campeonato>> GetCampeonatosComTimesAsync();
 
+        Task<IEnumerable<Campeonato>> GetCampeonatosByJogoAsync(int jogoId);
+
         Task<IEnumerable<Campeonato>> GetCampeonatosComPartidasAsync();
 
-        Task<bool> IsTimeInscritoAsync(Guid campeonatoId, Guid timeId);
+        Task<bool> IsTimeInscritoAsync(int campeonatoId, int timeId);
 
     }
 }
