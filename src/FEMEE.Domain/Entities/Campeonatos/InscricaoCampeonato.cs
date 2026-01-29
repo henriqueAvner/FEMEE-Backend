@@ -19,6 +19,27 @@ namespace FEMEE.Domain.Entities.Campeonatos
         public int TimeId { get; set; }
         [Column("CAPITAO_ID")]
         public int CapitaoId { get; set; }
+
+        [Column("TELEFONE_CONTATO")]
+        [MaxLength(20)]
+        [Required]
+        public string? TelefoneContato { get; set; }
+
+        [Column("EMAIL_CONTATO")]
+        [MaxLength(100)]
+        [Required]
+        public string? EmailContato { get; set; }
+
+        [Column("NOME_CAPITAO")]
+        [MaxLength(256)]
+        [Required]
+        public string? NomeCapitao { get; set; }
+        
+        [Column("NOME_TIME")]
+        [MaxLength(256)]
+        [Required]
+        public string? NomeTime { get; set; }
+
         [Column("DATA_INSCRICAO")]
         public DateTime DataInscricao { get; set; }
         [Column("STATUS_INSCRICAO")]

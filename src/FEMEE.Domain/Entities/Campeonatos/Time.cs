@@ -16,9 +16,14 @@ namespace FEMEE.Domain.Entities.Campeonatos
         [MaxLength(256)]
         [Column("TIME_NOME")]
         public string? Nome { get; set; }
+
+        [Column("TITULOS_TIME")]
         [Required]
+        public int TitulosTime { get; set; }
+
         [MaxLength(256)]
         [Column("SLUG")]
+        [Required]
         public string? Slug { get; set; }
         [MaxLength(512)]
         [Column("LOGO_URL")]
@@ -32,6 +37,7 @@ namespace FEMEE.Domain.Entities.Campeonatos
         public int Vitorias { get; set; }
         [Column("DERROTAS")]
         public int Derrotas { get; set; }
+
         [Column("EMPATES")]
         public int Empates { get; set; }
         [Column("PONTOS")]

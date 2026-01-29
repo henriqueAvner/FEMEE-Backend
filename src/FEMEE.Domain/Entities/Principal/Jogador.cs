@@ -13,8 +13,13 @@ namespace FEMEE.Domain.Entities.Principal
         [Column("NICKNAME")]
         public string? NickName { get; set; }
 
+        [MaxLength(512)]
+        [Column("FOTO_URL")]
+        public string? FotoUrl { get; set; }
+
         [Required]
         [Column("FUNCAO")]
+        //Conversao no DTO para as modalidades de jogo
         public FuncaoJogador Funcao { get; set; }
         [Column("DATA_ENTRADA_TIME")]
         public DateTime DataEntradaTime { get; set; }

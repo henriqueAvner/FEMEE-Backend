@@ -22,8 +22,11 @@ namespace FEMEE.Domain.Entities.Principal
         [MaxLength(512)]
         [Column("SLUG")]
         public string? Slug { get; set; }
+
+
         [MaxLength(1024)]
         [Column("RESUMO")]
+        //Garantir que ele irá alimentar os cards da Home
         public string? Resumo { get; set; }
 
         [Column("CONTEUDO")]
@@ -31,9 +34,11 @@ namespace FEMEE.Domain.Entities.Principal
         [MaxLength(128)]
         [Column("CATEGORIA")]
         public string? Categoria { get; set; }
+
+        [Column("NOTICIA_URL")]
         [MaxLength(512)]
-        [Column("IMAGEM_URL")]
         public string? ImagemUrl { get; set; }
+
         [Column("DATA_PUBLICACAO")]
         public DateTime DataPublicacao { get; set; }
         [Column("NUMERO_COMENTARIOS")]

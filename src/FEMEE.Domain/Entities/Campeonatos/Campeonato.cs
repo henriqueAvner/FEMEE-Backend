@@ -27,6 +27,10 @@ namespace FEMEE.Domain.Entities.Campeonatos
         [Column("DATA_FIM")]
         public DateTime DataFim { get; set; }
 
+        [MaxLength(512)]
+        [Column("BANNER_CAMPEONATO_URL")]
+        public string? ImagemUrl { get; set; }
+
         [Required]
         [Column("DATA_LIMITE_INSCRICAO")]
         public DateTime DataLimiteInscricao { get; set; }
@@ -45,7 +49,10 @@ namespace FEMEE.Domain.Entities.Campeonatos
         public string? Estado { get; set; }
         
         [Column("PREMIACAO")]
+        //Certificar de que o DTO de saida formate como string 
+        // para bater com o front-end (R$ 1.000,00)
         public decimal Premiacao { get; set; }
+
         [Column("NUMERO_VAGAS")]
         public int NumeroVagas { get; set; }
 
