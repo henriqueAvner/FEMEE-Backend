@@ -18,7 +18,7 @@ namespace FEMEE.Domain.Interfaces
 
         IRepository<Partida> Partidas {get;}
         IRepository<Noticia> Noticias {get;}
-        IRepository<Conquista> Conquista {get;}
+        IRepository<Conquista> Conquistas {get; }
         IRepository<Jogo> Jogos {get;}
         IRepository<Produto> Produtos {get;}
         IRepository<InscricaoCampeonato> InscricoesCampeonato {get;}

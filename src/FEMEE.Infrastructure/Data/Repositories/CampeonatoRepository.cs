@@ -9,7 +9,7 @@ using System.Text;
 
 namespace FEMEE.Infrastructure.Data.Repositories
 {
-    internal class CampeonatoRepository : GenericRepository<Campeonato>, ICampeonatoRepository
+    public class CampeonatoRepository : GenericRepository<Campeonato>, ICampeonatoRepository
     {
         private readonly FemeeDbContext _context;
 
