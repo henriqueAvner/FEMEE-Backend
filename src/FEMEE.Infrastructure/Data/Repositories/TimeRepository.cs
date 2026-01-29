@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FEMEE.Domain.Entities.Campeonatos;
 using FEMEE.Domain.Interfaces;
 using FEMEE.Infrastructure.Data.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace FEMEE.Infrastructure.Data.Repositories
 {
@@ -14,42 +15,77 @@ namespace FEMEE.Infrastructure.Data.Repositories
         public TimeRepository(FemeeDbContext context) : base(context)
         {
             _context = context;
-            
+
         }
 
-        public Task AtualizarDerrotasAsync(Guid timeId, int pontos = -3)
+        public async Task<Time> GetBySlugAsync(string slug)
         {
-            throw new NotImplementedException();
+            return await _context.Times.FirstOrDefaultAsync(t => t.Slug == slug);
         }
 
-        public Task AtualizarEmpatesAsync(Guid timeId, int pontos = 1)
+        public async Task<IEnumerable<Time>> GetRankingAsync(int top = 10)
         {
-            throw new NotImplementedException();
+            return await _context.Times
+                .OrderByDescending(t => t.Pontos)
+                .Take(top)
+                .ToListAsync();
         }
 
-        public Task AtualizarVitoriasAsync(Guid timeId, int pontos = 3)
+        public async Task<IEnumerable<Time>> GetTimesWithPlayersAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Times.Include(t => t.Jogadores).ToListAsync();
         }
 
-        public Task<Time> GetBySlugAsync(string slug)
+        public async Task<IEnumerable<Time>> GetTimesByCampeonatoIdAsync(int campeonatoId)
         {
-            throw new NotImplementedException();
+            return await _context.InscricoesCampeonatos
+                .Where(i => i.CampeonatoId == campeonatoId)
+                .Select(i => i.Time)
+                .Distinct()
+                .ToListAsync();
+
         }
 
-        public Task<IEnumerable<Time>> GetRankingAsync(int top = 10)
+        public async Task AtualizarVitoriasAsync(Guid timeId, int pontos = 3)
         {
-            throw new NotImplementedException();
+            Time time = await GetByIdAsync(timeId);
+            if (time != null)
+            {
+                time.Vitorias++;
+                time.Pontos += pontos;
+                await UpdateAsync(time);
+            }
         }
 
-        public Task<IEnumerable<Time>> GetTimesByCampeonatoIdAsync(Guid campeonatoId)
+        public async Task AtualizarDerrotasAsync(Guid timeId, int pontos = -3)
         {
-            throw new NotImplementedException();
+            var time = await GetByIdAsync(timeId);
+            if (time != null)
+            {
+                time.Derrotas++;
+                time.Pontos = Math.Max(0, time.Pontos + pontos);
+                await UpdateAsync(time);
+            }
         }
 
-        public Task<IEnumerable<Time>> GetTimesWithPlayersAsync()
+        public async Task AtualizarEmpatesAsync(Guid timeId, int pontos = 1)
         {
-            throw new NotImplementedException();
+            var time = await GetByIdAsync(timeId);
+            if (time != null)
+            {
+                time.Empates++;
+                time.Pontos += pontos;
+                await UpdateAsync(time);
+            }
         }
+
+
+
+
+
+
+
+
+
     }
 }

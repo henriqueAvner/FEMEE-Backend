@@ -12,7 +12,7 @@ namespace FEMEE.Domain.Interfaces
         Task<IEnumerable<Time>> GetRankingAsync(int top = 10);
         Task<IEnumerable<Time>> GetTimesWithPlayersAsync();
 
-        Task<IEnumerable<Time>> GetTimesByCampeonatoIdAsync(Guid campeonatoId);
+        Task<IEnumerable<Time>> GetTimesByCampeonatoIdAsync(int campeonatoId);
 
         Task AtualizarVitoriasAsync(Guid timeId, int pontos = 3);
         Task AtualizarEmpatesAsync(Guid timeId, int pontos = 1);
