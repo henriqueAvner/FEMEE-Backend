@@ -16,9 +16,9 @@ namespace FEMEE.Domain.Entities.Campeonatos
         [Column("CAMPEONATO_ID")]
         public int CampeonatoId { get; set; }
         [Column("TIME_ID")]
-        public int TimeId { get; set; }
+        public int? TimeId { get; set; }
         [Column("CAPITAO_ID")]
-        public int CapitaoId { get; set; }
+        public int? CapitaoId { get; set; }
 
         [Column("TELEFONE_CONTATO")]
         [MaxLength(20)]
