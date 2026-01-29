@@ -29,7 +29,7 @@ namespace FEMEE.Domain.Entities.Principal
         public StatusJogador Status { get; set; }
         public Time? Time { get; set; }
         [Column("TIME_ID")]
-        public int TimeId {get; set;}
+        public int? TimeId {get; set;}
     }
 }
 
