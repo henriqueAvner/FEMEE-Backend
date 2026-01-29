@@ -9,7 +9,7 @@ namespace FEMEE.Domain.Entities.Campeonatos
         [Key]
         public int Id { get; set; }
         [Required]
-        public int CampeonatoId { get; set; }
+        public int? CampeonatoId { get; set; }
         [Required]
         [Column("TIME_A_ID")]
         public int TimeAId { get; set; }
@@ -17,7 +17,7 @@ namespace FEMEE.Domain.Entities.Campeonatos
         [Column("TIME_B_ID")]
         public int TimeBId { get; set; }
         [Column("TIME_VENCEDOR_ID")]
-        public int TimeVencedorId { get; set; }
+        public int? TimeVencedorId { get; set; }
         [Required]
         [Column("DATA_HORA")]
         public DateTime DataHora { get; set; }

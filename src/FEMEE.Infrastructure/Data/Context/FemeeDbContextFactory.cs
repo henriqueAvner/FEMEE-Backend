@@ -9,17 +9,28 @@ namespace FEMEE.Infrastructure.Data.Context
     {
         public FemeeDbContext CreateDbContext(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("../FEMEE.API/appsettings.json")
+            // 1. Localiza a pasta da API de forma robusta
+            string projectPath = Directory.GetCurrentDirectory();
+            
+            // Se estivermos na raiz da solução, entra na pasta da API
+            // Se estivermos na pasta Infrastructure, sobe um nível e entra na API
+            string apiPath = Path.Combine(projectPath, "src", "FEMEE.API");
+            if (!Directory.Exists(apiPath))
+            {
+                apiPath = Path.Combine(projectPath, "..", "FEMEE.API");
+            }
+
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(apiPath)
+                .AddJsonFile("appsettings.json")
                 .Build();
 
+            var builder = new DbContextOptionsBuilder<FemeeDbContext>();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            var optionsBuilder = new DbContextOptionsBuilder<FemeeDbContext>();
-            optionsBuilder.UseSqlServer(connectionString);
+            builder.UseSqlServer(connectionString);
 
-            return new FemeeDbContext(optionsBuilder.Options);
+            return new FemeeDbContext(builder.Options);
         }
     }
 }
