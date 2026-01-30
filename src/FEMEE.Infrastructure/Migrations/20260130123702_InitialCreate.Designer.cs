@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FEMEE.Infrastructure.Migrations
 {
     [DbContext(typeof(FemeeDbContext))]
-    [Migration("20260129141942_InitialCreateFixed")]
-    partial class InitialCreateFixed
+    [Migration("20260130123702_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -295,7 +295,6 @@ namespace FEMEE.Infrastructure.Migrations
                         .HasColumnName("TIME_B_ID");
 
                     b.Property<int?>("TimeVencedorId")
-                        .IsRequired()
                         .HasColumnType("int")
                         .HasColumnName("TIME_VENCEDOR_ID");
 
@@ -489,8 +488,10 @@ namespace FEMEE.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("NUMERO_COMENTARIOS");
 
-                    b.Property<DateTime>("Publicada")
-                        .HasColumnType("datetime2")
+                    b.Property<bool>("Publicada")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
                         .HasColumnName("PUBLICADA");
 
                     b.Property<string>("Resumo")
@@ -751,8 +752,7 @@ namespace FEMEE.Infrastructure.Migrations
                     b.HasOne("FEMEE.Domain.Entities.Campeonatos.Time", "TimeVencedor")
                         .WithMany()
                         .HasForeignKey("TimeVencedorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Campeonato");
 

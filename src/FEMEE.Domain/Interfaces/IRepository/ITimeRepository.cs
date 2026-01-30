@@ -14,9 +14,9 @@ namespace FEMEE.Domain.Interfaces
 
         Task<IEnumerable<Time>> GetTimesByCampeonatoIdAsync(int campeonatoId);
 
-        Task AtualizarVitoriasAsync(Guid timeId, int pontos = 3);
-        Task AtualizarEmpatesAsync(Guid timeId, int pontos = 1);
-        Task AtualizarDerrotasAsync(Guid timeId, int pontos = -3);
+        Task AtualizarVitoriasAsync(int timeId, int pontos = 3);
+        Task AtualizarEmpatesAsync(int timeId, int pontos = 1);
+        Task AtualizarDerrotasAsync(int timeId, int pontos = -3);
 
         
     }

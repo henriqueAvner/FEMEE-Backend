@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FEMEE.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreateFixed : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -177,7 +177,7 @@ namespace FEMEE.Infrastructure.Migrations
                     DATA_PUBLICACAO = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NUMERO_COMENTARIOS = table.Column<int>(type: "int", nullable: false),
                     VISUALIZACOES = table.Column<int>(type: "int", nullable: false),
-                    PUBLICADA = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    PUBLICADA = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -270,7 +270,7 @@ namespace FEMEE.Infrastructure.Migrations
                     CampeonatoId = table.Column<int>(type: "int", nullable: false),
                     TIME_A_ID = table.Column<int>(type: "int", nullable: false),
                     TIME_B_ID = table.Column<int>(type: "int", nullable: false),
-                    TIME_VENCEDOR_ID = table.Column<int>(type: "int", nullable: false),
+                    TIME_VENCEDOR_ID = table.Column<int>(type: "int", nullable: true),
                     DATA_HORA = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LOCAL = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     FASE = table.Column<int>(type: "int", nullable: false),
@@ -305,7 +305,7 @@ namespace FEMEE.Infrastructure.Migrations
                         column: x => x.TIME_VENCEDOR_ID,
                         principalTable: "T_TIMES",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

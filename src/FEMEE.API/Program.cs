@@ -4,8 +4,6 @@ using FEMEE.Infrastructure.Data;
 using FEMEE.Infrastructure.Data.Context;
 using FEMEE.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
