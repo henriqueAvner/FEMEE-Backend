@@ -1,6 +1,5 @@
 // FEMEE.Infrastructure/Data/UnitOfWork.cs
 
-using FEMEE.Domain.Entities;
 using FEMEE.Domain.Entities.Campeonatos;
 using FEMEE.Domain.Entities.Principal;
 using FEMEE.Domain.Entities.Store;
