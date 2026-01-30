@@ -4,6 +4,7 @@ using FEMEE.Domain.Interfaces;
 using FEMEE.Infrastructure.Data;
 using FEMEE.Infrastructure.Data.Context;
 using FEMEE.Infrastructure.Data.Repositories;
+using FEMEE.Infrastructure.Extensions;
 using FEMEE.Infrastructure.Security;
 using FEMEE.Infrastructure.Security.Services;
 using FEMEE.Infrastructure.Security.Settings;
@@ -15,6 +16,8 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(connectionString))
+    throw new InvalidOperationException("ConnectionStrings:DefaultConnection não está configurada em appsettings ou variáveis de ambiente.");
 
 builder.Services.AddDbContext<FemeeDbContext>(options =>
     options.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly("FEMEE.Infrastructure"))
@@ -25,6 +28,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ITimeRepository, TimeRepository>();
 builder.Services.AddScoped<ICampeonatoRepository, CampeonatoRepository>();
 builder.Services.AddScoped<IJogadorRepository, JogadorRepository>();
+builder.Services.AddAuthorizationPolicies();
 
 var jwtSettings = new JwtSettings();
 builder.Configuration.GetSection("JwtSettings").Bind(jwtSettings);
@@ -57,6 +61,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorizationPolicies();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -67,7 +72,75 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Adicione ao Program.cs ANTES de app.Build()
+
+// ===== CONFIGURAR CORS =====
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            // Domínios permitidos
+            .WithOrigins(
+                "https://femee-arena-hub.com",      // Produção
+                "http://localhost:3000",             // Desenvolvimento local
+                "http://localhost:5173"              // Vite dev server
+             )
+            // Métodos HTTP permitidos
+            .AllowAnyMethod()
+            // Headers permitidos
+            .AllowAnyHeader()
+            // Permitir cookies/credenciais
+            .AllowCredentials();
+    });
+
+    // Política alternativa para desenvolvimento (menos restritiva)
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
+// ===== ADICIONAR MIDDLEWARE DE CORS =====
+
 var app = builder.Build();
+
+// IMPORTANTE: Adicionar CORS ANTES de UseAuthentication e UseAuthorization
+app.UseCors("AllowFrontend");
+// Program.cs - Versão com ambiente
+
+var environment = app.Environment;
+
+if (environment.IsDevelopment())
+{
+    // Em desenvolvimento, permitir localhost
+    app.UseCors("AllowFrontend");
+}
+else if (environment.IsProduction())
+{
+    // Em produção, apenas domínio oficial
+    app.UseCors("AllowFrontend");
+}
+
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins(allowedOrigins ?? Array.Empty<string>())
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
+
+// Depois adicione os outros middlewares
 app.UseAuthentication();
 app.UseAuthorization();
 
