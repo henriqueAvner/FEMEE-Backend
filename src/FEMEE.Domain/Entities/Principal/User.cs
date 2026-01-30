@@ -19,10 +19,10 @@ namespace FEMEE.Domain.Entities.Principal
         [Column("EMAIL")]
         public string? Email { get; set; }
 
+        /// <summary>Hash da senha (ex.: BCrypt). Nunca armazenar senha em texto plano.</summary>
         [Required]
         [Column("SENHA")]
-        [MaxLength(10)]
-        [MinLength(6)]
+        [MaxLength(256)]
         public string? Senha { get; set; }
         [MaxLength(20)]
         [Required]
