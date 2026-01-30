@@ -46,9 +46,9 @@ namespace FEMEE.Infrastructure.Data.Repositories
 
         }
 
-        public async Task AtualizarVitoriasAsync(Guid timeId, int pontos = 3)
+        public async Task AtualizarVitoriasAsync(int timeId, int pontos = 3)
         {
-            Time time = await GetByIdAsync(timeId);
+            Time? time = await GetByIdAsync(timeId);
             if (time != null)
             {
                 time.Vitorias++;
@@ -57,7 +57,7 @@ namespace FEMEE.Infrastructure.Data.Repositories
             }
         }
 
-        public async Task AtualizarDerrotasAsync(Guid timeId, int pontos = -3)
+        public async Task AtualizarDerrotasAsync(int timeId, int pontos = -3)
         {
             var time = await GetByIdAsync(timeId);
             if (time != null)
@@ -68,7 +68,7 @@ namespace FEMEE.Infrastructure.Data.Repositories
             }
         }
 
-        public async Task AtualizarEmpatesAsync(Guid timeId, int pontos = 1)
+        public async Task AtualizarEmpatesAsync(int timeId, int pontos = 1)
         {
             var time = await GetByIdAsync(timeId);
             if (time != null)

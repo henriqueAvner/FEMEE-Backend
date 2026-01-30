@@ -201,8 +201,12 @@ namespace FEMEE.Infrastructure.Data.Context
                 partida.HasIndex(e => new { e.CampeonatoId, e.DataHora })
                     .HasDatabaseName("IX_PARTIDA_CAMPEONATOID_DATAHORA");
 
-                // Relacionamentos (já configurados em Time)
-                // Aqui apenas confirmamos
+                // TimeVencedor opcional (partida pode não ter vencedor ainda)
+                partida.HasOne(p => p.TimeVencedor)
+                    .WithMany()
+                    .HasForeignKey(p => p.TimeVencedorId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired(false);
 
                 partida.ToTable("T_PARTIDAS");
             });
@@ -233,6 +237,9 @@ namespace FEMEE.Infrastructure.Data.Context
                 noticia.HasIndex(e => e.Slug)
                     .IsUnique()
                     .HasDatabaseName("IX_NOTICIA_SLUG_UNIQUE");
+
+                noticia.Property(e => e.Publicada)
+                    .HasDefaultValue(false);
 
                 // Índice para queries de notícias publicadas
                 noticia.HasIndex(e => e.Publicada)

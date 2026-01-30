@@ -39,13 +39,9 @@ namespace FEMEE.Infrastructure.Data.Repositories
             return await Task.FromResult(_dbSet.Where(predicate).ToList());
         }
 
-        public async Task<T> GetByIdAsync(Guid id)
+        public async Task<T?> GetByIdAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
-            if(entity == null)
-            {
-                return null;
-            }
             return entity;
         }
 
@@ -72,7 +68,7 @@ namespace FEMEE.Infrastructure.Data.Repositories
             await Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(int id)
         {
             var entity = await GetByIdAsync(id);
             if(entity != null)

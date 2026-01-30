@@ -292,7 +292,6 @@ namespace FEMEE.Infrastructure.Migrations
                         .HasColumnName("TIME_B_ID");
 
                     b.Property<int?>("TimeVencedorId")
-                        .IsRequired()
                         .HasColumnType("int")
                         .HasColumnName("TIME_VENCEDOR_ID");
 
@@ -486,8 +485,10 @@ namespace FEMEE.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("NUMERO_COMENTARIOS");
 
-                    b.Property<DateTime>("Publicada")
-                        .HasColumnType("datetime2")
+                    b.Property<bool>("Publicada")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
                         .HasColumnName("PUBLICADA");
 
                     b.Property<string>("Resumo")
@@ -748,8 +749,7 @@ namespace FEMEE.Infrastructure.Migrations
                     b.HasOne("FEMEE.Domain.Entities.Campeonatos.Time", "TimeVencedor")
                         .WithMany()
                         .HasForeignKey("TimeVencedorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Campeonato");
 
