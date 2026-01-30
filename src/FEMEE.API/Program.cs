@@ -1,8 +1,10 @@
 
+using FEMEE.Application.Services.Auth;
 using FEMEE.Domain.Interfaces;
 using FEMEE.Infrastructure.Data;
 using FEMEE.Infrastructure.Data.Context;
 using FEMEE.Infrastructure.Data.Repositories;
+using FEMEE.Infrastructure.Security;
 using FEMEE.Infrastructure.Security.Services;
 using FEMEE.Infrastructure.Security.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -32,6 +34,8 @@ if (string.IsNullOrWhiteSpace(jwtSettings.SecretKey) || jwtSettings.SecretKey.Le
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
+builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddAuthentication(options =>
 {
