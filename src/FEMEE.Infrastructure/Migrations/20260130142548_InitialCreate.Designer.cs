@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FEMEE.Infrastructure.Migrations
 {
     [DbContext(typeof(FemeeDbContext))]
-    [Migration("20260130123702_InitialCreate")]
+    [Migration("20260130142548_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -562,8 +562,8 @@ namespace FEMEE.Infrastructure.Migrations
 
                     b.Property<string>("Senha")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
                         .HasColumnName("SENHA");
 
                     b.Property<string>("Telefone")

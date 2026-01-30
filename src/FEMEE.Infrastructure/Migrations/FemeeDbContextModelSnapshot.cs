@@ -559,8 +559,8 @@ namespace FEMEE.Infrastructure.Migrations
 
                     b.Property<string>("Senha")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
                         .HasColumnName("SENHA");
 
                     b.Property<string>("Telefone")

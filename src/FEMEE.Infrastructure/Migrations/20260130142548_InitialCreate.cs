@@ -84,7 +84,7 @@ namespace FEMEE.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     USUARIO = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     EMAIL = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    SENHA = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    SENHA = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     TELEFONE = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     DATA_CRIACAO = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DATA_ATUALIZACAO = table.Column<DateTime>(type: "datetime2", nullable: false),
