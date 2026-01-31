@@ -22,7 +22,7 @@ namespace FEMEE.Infrastructure.Security.Services
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
-        public async Task<string> GenerateToken(User user)
+        public async Task<string> GenerateTokenAsync(User user)
         {
             ArgumentNullException.ThrowIfNull(user);
             if (string.IsNullOrWhiteSpace(user.Email))
@@ -62,7 +62,7 @@ namespace FEMEE.Infrastructure.Security.Services
                 throw new InvalidOperationException("Erro ao gerar token JWT.", ex);
             }
         }
-        public async Task<bool> ValidateToken(string token)
+        public async Task<bool> ValidateTokenAsync(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
                 return await Task.FromResult(false);
@@ -101,12 +101,12 @@ namespace FEMEE.Infrastructure.Security.Services
             }
         }
 
-        public async Task<User?> GetUserFromToken(string token)
+        public async Task<User?> GetUserFromTokenAsync(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
                 return null;
 
-            if (!await ValidateToken(token))
+            if (!await ValidateTokenAsync(token))
                 return null;
 
             try
