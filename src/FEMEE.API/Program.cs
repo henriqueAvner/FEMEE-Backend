@@ -1,4 +1,5 @@
 
+using FEMEE.Application.Mappings;
 using FEMEE.Application.Services.Auth;
 using FEMEE.Domain.Interfaces;
 using FEMEE.Infrastructure.Data;
@@ -40,6 +41,7 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddAuthentication(options =>
 {
