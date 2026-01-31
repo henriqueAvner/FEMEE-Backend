@@ -48,7 +48,7 @@ namespace FEMEE.Application.Services.Auth
                 if (!_passwordHasher.VerifyPassword(request.Senha, user.Senha!))
                     throw new UnauthorizedAccessException("Email ou senha inválidos.");
 
-                var token = await _authenticationService.GenerateToken(user);
+                var token = await _authenticationService.GenerateTokenAsync(user);
                 var expiresAt = DateTime.UtcNow.AddMinutes(60);
 
                 return new LoginResponse
@@ -122,7 +122,7 @@ namespace FEMEE.Application.Services.Auth
                 await _unitOfWork.SaveChangesAsync();
 
                 // Gerar token
-                var token = await _authenticationService.GenerateToken(user);
+                var token = await _authenticationService.GenerateTokenAsync(user);
 
                 var expiresAt = DateTime.UtcNow.AddMinutes(60);
 
