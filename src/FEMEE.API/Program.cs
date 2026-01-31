@@ -104,45 +104,21 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
     });
 });
-
-// ===== ADICIONAR MIDDLEWARE DE CORS =====
-
 var app = builder.Build();
 
-// IMPORTANTE: Adicionar CORS ANTES de UseAuthentication e UseAuthorization
+// ===== ADICIONAR MIDDLEWARE DE CORS =====
 app.UseCors("AllowFrontend");
-// Program.cs - Versão com ambiente
-
-var environment = app.Environment;
-
-if (environment.IsDevelopment())
-{
-    // Em desenvolvimento, permitir localhost
-    app.UseCors("AllowFrontend");
-}
-else if (environment.IsProduction())
-{
-    // Em produção, apenas domínio oficial
-    app.UseCors("AllowFrontend");
-}
-
-var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy
-            .WithOrigins(allowedOrigins ?? Array.Empty<string>())
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();
-    });
-});
-
-// Depois adicione os outros middlewares
 app.UseAuthentication();
 app.UseAuthorization();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.MapControllers();
+app.Run();
 
 if (app.Environment.IsDevelopment())
 {
