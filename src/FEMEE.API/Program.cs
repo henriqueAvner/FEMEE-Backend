@@ -1,6 +1,22 @@
 
+using FEMEE.API.Middleware;
+using FEMEE.Application.DTOs.Auth;
+using FEMEE.Application.DTOs.InscricaoCampeonato;
+using FEMEE.Application.DTOs.Jogador;
+using FEMEE.Application.DTOs.Noticia;
+using FEMEE.Application.DTOs.Partida;
+using FEMEE.Application.DTOs.Produto;
+using FEMEE.Application.DTOs.Time;
+using FEMEE.Application.DTOs.User;
 using FEMEE.Application.Mappings;
 using FEMEE.Application.Services.Auth;
+using FEMEE.Application.Validators.InscricaoCampeonato;
+using FEMEE.Application.Validators.Jogador;
+using FEMEE.Application.Validators.Noticia;
+using FEMEE.Application.Validators.Partida;
+using FEMEE.Application.Validators.Produto;
+using FEMEE.Application.Validators.Time;
+using FEMEE.Application.Validators.User;
 using FEMEE.Domain.Interfaces;
 using FEMEE.Infrastructure.Data;
 using FEMEE.Infrastructure.Data.Context;
@@ -9,6 +25,7 @@ using FEMEE.Infrastructure.Extensions;
 using FEMEE.Infrastructure.Security;
 using FEMEE.Infrastructure.Security.Services;
 using FEMEE.Infrastructure.Security.Settings;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -30,6 +47,36 @@ builder.Services.AddScoped<ITimeRepository, TimeRepository>();
 builder.Services.AddScoped<ICampeonatoRepository, CampeonatoRepository>();
 builder.Services.AddScoped<IJogadorRepository, JogadorRepository>();
 builder.Services.AddAuthorizationPolicies();
+
+
+// ===== CONFIGURAR FLUENTVALIDATION =====
+builder.Services.AddValidatorsFromAssemblyContaining<CreateUserDtoValidator>();
+
+//User
+builder.Services.AddScoped<IValidator<CreateUserDto>, CreateUserDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateUserDto>, UpdateUserDtoValidator>();
+//Auth
+builder.Services.AddScoped<IValidator<LoginRequest>, LoginRequestValidator>();
+//Time
+builder.Services.AddScoped<IValidator<CreateTimeDto>, CreateTimeDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateTimeDto>, UpdateTimeDtoValidator>();
+//Jogador
+builder.Services.AddScoped<IValidator<CreateJogadorDto>, CreateJogadorDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateJogadorDto>, UpdateJogadorDtoValidator>();
+//Partida
+builder.Services.AddScoped<IValidator<CreatePartidaDto>, CreatePartidaDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdatePartidaDto>, UpdatePartidaDtoValidator>();
+//Produto
+builder.Services.AddScoped<IValidator<CreateProdutoDto>, CreateProdutoDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateProdutoDto>, UpdateProdutoDtoValidator>();
+//InscricaoCampeonato
+builder.Services.AddScoped<IValidator<CreateInscricaoCampeonatoDto>, CreateInscricaoCampeonatoDtoValidator>();
+//Noticia
+builder.Services.AddScoped<IValidator<CreateNoticiaDto>, CreateNoticiaDtoValidator>();
+
+
+
+
 
 var jwtSettings = new JwtSettings();
 builder.Configuration.GetSection("JwtSettings").Bind(jwtSettings);
@@ -108,25 +155,20 @@ builder.Services.AddCors(options =>
 });
 var app = builder.Build();
 
+// ===== ADICIONAR MIDDLEWARE DE TRATAMENTO DE ERROS =====
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 // ===== ADICIONAR MIDDLEWARE DE CORS =====
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.MapControllers();
-app.Run();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 app.MapControllers();
 app.Run();
