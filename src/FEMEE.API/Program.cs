@@ -1,4 +1,5 @@
 
+using FEMEE.API.Configuration;
 using FEMEE.API.Middleware;
 using FEMEE.Application.DTOs.Auth;
 using FEMEE.Application.DTOs.InscricaoCampeonato;
@@ -29,6 +30,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -116,60 +118,81 @@ builder.Services.AddAuthorizationPolicies();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnet/core/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var logger = LoggingConfiguration.ConfigureLogging();
+Log.Logger = logger;
 
-// Adicione ao Program.cs ANTES de app.Build()
-
-// ===== CONFIGURAR CORS =====
-
-builder.Services.AddCors(options =>
+try
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    builder.Host.UseSerilog();
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+    // Adicione ao Program.cs ANTES de app.Build()
+
+    // ===== CONFIGURAR CORS =====
+
+    builder.Services.AddCors(options =>
     {
-        policy
-            // Domínios permitidos
-            .WithOrigins(
-                "https://femee-arena-hub.com",      // Produção
-                "http://localhost:3000",             // Desenvolvimento local
-                "http://localhost:5173"              // Vite dev server
-             )
-            // Métodos HTTP permitidos
-            .AllowAnyMethod()
-            // Headers permitidos
-            .AllowAnyHeader()
-            // Permitir cookies/credenciais
-            .AllowCredentials();
+        options.AddPolicy("AllowFrontend", policy =>
+        {
+            policy
+                // Domínios permitidos
+                .WithOrigins(
+                    "https://femee-arena-hub.com",      // Produção
+                    "http://localhost:3000",             // Desenvolvimento local
+                    "http://localhost:5173"              // Vite dev server
+                 )
+                // Métodos HTTP permitidos
+                .AllowAnyMethod()
+                // Headers permitidos
+                .AllowAnyHeader()
+                // Permitir cookies/credenciais
+                .AllowCredentials();
+        });
+
+        // Política alternativa para desenvolvimento (menos restritiva)
+        options.AddPolicy("AllowAll", policy =>
+        {
+            policy
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
     });
 
-    // Política alternativa para desenvolvimento (menos restritiva)
-    options.AddPolicy("AllowAll", policy =>
+
+    var app = builder.Build();
+
+    // ===== ADICIONAR MIDDLEWARE DE TRATAMENTO DE ERROS =====
+
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
+    app.UseMiddleware<RequestLoggingMiddleware>();
+    // ===== ADICIONAR MIDDLEWARE DE CORS =====
+
+    if (app.Environment.IsDevelopment())
     {
-        policy
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-    });
-});
-var app = builder.Build();
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
-// ===== ADICIONAR MIDDLEWARE DE TRATAMENTO DE ERROS =====
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+    app.UseCors("AllowFrontend");
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-// ===== ADICIONAR MIDDLEWARE DE CORS =====
+    app.MapControllers();
+    app.Run();
 
-if (app.Environment.IsDevelopment())
+}
+catch (Exception ex)
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    Log.Fatal(ex, "Aplicação encerrada inesperadamente");
+}
+finally
+{
+    Log.CloseAndFlush();
 }
 
-app.UseCors("AllowFrontend");
-app.UseAuthentication();
-app.UseAuthorization();
 
-app.MapControllers();
-app.Run();
+
+
 
