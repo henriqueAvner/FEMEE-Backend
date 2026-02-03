@@ -1,15 +1,19 @@
 using AutoMapper;
 using FEMEE.Application.DTOs.User;
-using FEMEE.Domain.Entities.Principal;
+using FEMEE.Application.Interfaces.Common;
 using FEMEE.Application.Interfaces.Repositories;
 using FEMEE.Application.Interfaces.Services;
-using FEMEE.Application.Interfaces.Common;
-using Microsoft.Extensions.Logging;
 using FEMEE.Application.Logging;
+using FEMEE.Domain.Entities.Principal;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace FEMEE.Application.Services
 {
+    /// <summary>
+    /// Serviço de usuários.
+    /// Implementa as operações de CRUD e lógica de negócio para usuários.
+    /// </summary>
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -17,18 +21,24 @@ namespace FEMEE.Application.Services
         private readonly ILogger<UserService> _logger;
         private readonly IPasswordHasher _passwordHasher;
 
+        /// <summary>
+        /// Construtor do serviço de usuários.
+        /// </summary>
         public UserService(
-            IUnitOfWork unitOfWork, 
-            IMapper mapper, 
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
             ILogger<UserService> logger,
             IPasswordHasher passwordHasher)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-            _logger = logger;
-            _passwordHasher = passwordHasher;
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
         }
 
+        /// <summary>
+        /// Obtém um usuário pelo ID.
+        /// </summary>
         public async Task<UserResponseDto> GetUserByIdAsync(int id)
         {
             using (StructuredLogging.BeginOperationScope("GetUserById", id))
@@ -61,6 +71,81 @@ namespace FEMEE.Application.Services
             }
         }
 
+        /// <summary>
+        /// Obtém todos os usuários.
+        /// </summary>
+        public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
+        {
+            using (StructuredLogging.BeginOperationScope("GetAllUsers"))
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                try
+                {
+                    _logger.LogInformation("Buscando todos os usuários");
+
+                    var users = await _unitOfWork.Users.GetAllAsync();
+
+                    stopwatch.Stop();
+                    _logger.LogInformation("Total de usuários encontrados: {Count} em {ElapsedMilliseconds}ms",
+                        users.Count(), stopwatch.ElapsedMilliseconds);
+
+                    return _mapper.Map<IEnumerable<UserResponseDto>>(users);
+                }
+                catch (Exception ex)
+                {
+                    stopwatch.Stop();
+                    _logger.LogError(ex, "Erro ao buscar todos os usuários em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Obtém um usuário pelo email.
+        /// </summary>
+        public async Task<UserResponseDto> GetUserByEmailAsync(string email)
+        {
+            using (StructuredLogging.BeginOperationScope("GetUserByEmail"))
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(email))
+                    {
+                        _logger.LogWarning("Email vazio fornecido");
+                        throw new ArgumentException("Email não pode ser vazio", nameof(email));
+                    }
+
+                    _logger.LogInformation("Buscando usuário por email: {Email}", email);
+
+                    var users = await _unitOfWork.Users.GetAllAsync();
+                    var user = users.FirstOrDefault(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+
+                    if (user == null)
+                    {
+                        _logger.LogWarning("Usuário não encontrado: {Email}", email);
+                        throw new KeyNotFoundException($"Usuário com email {email} não encontrado");
+                    }
+
+                    stopwatch.Stop();
+                    _logger.LogInformation("Usuário encontrado por email em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
+
+                    return _mapper.Map<UserResponseDto>(user);
+                }
+                catch (Exception ex)
+                {
+                    stopwatch.Stop();
+                    _logger.LogError(ex, "Erro ao buscar usuário por email em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Cria um novo usuário.
+        /// </summary>
         public async Task<UserResponseDto> CreateUserAsync(CreateUserDto dto)
         {
             using (StructuredLogging.BeginOperationScope("CreateUser"))
@@ -73,8 +158,9 @@ namespace FEMEE.Application.Services
                 {
                     _logger.LogInformation("Iniciando criação de usuário: {Email}", dto.Email);
 
+                    // Verificar se email já existe
                     var users = await _unitOfWork.Users.GetAllAsync();
-                    if (users.Any(u => u.Email == dto.Email))
+                    if (users.Any(u => u.Email.Equals(dto.Email, StringComparison.OrdinalIgnoreCase)))
                     {
                         _logger.LogWarning("Email já cadastrado: {Email}", dto.Email);
                         throw new InvalidOperationException("Email já cadastrado");
@@ -101,6 +187,85 @@ namespace FEMEE.Application.Services
                     stopwatch.Stop();
                     _logger.LogError(ex, "Erro ao criar usuário em {ElapsedMilliseconds}ms: {Email}",
                         stopwatch.ElapsedMilliseconds, dto.Email);
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Atualiza um usuário existente.
+        /// </summary>
+        public async Task<UserResponseDto> UpdateUserAsync(int id, UpdateUserDto dto)
+        {
+            using (StructuredLogging.BeginOperationScope("UpdateUser", id))
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                try
+                {
+                    _logger.LogInformation("Atualizando usuário: {UserId}", id);
+
+                    var user = await _unitOfWork.Users.GetByIdAsync(id);
+                    if (user == null)
+                    {
+                        _logger.LogWarning("Usuário não encontrado: {UserId}", id);
+                        throw new KeyNotFoundException($"Usuário com ID {id} não encontrado");
+                    }
+
+                    _mapper.Map(dto, user);
+                    user.DataAtualizacao = DateTime.UtcNow;
+
+                    await _unitOfWork.Users.UpdateAsync(user);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    stopwatch.Stop();
+                    _logger.LogInformation("Usuário atualizado com sucesso em {ElapsedMilliseconds}ms",
+                        stopwatch.ElapsedMilliseconds);
+
+                    return _mapper.Map<UserResponseDto>(user);
+                }
+                catch (Exception ex)
+                {
+                    stopwatch.Stop();
+                    _logger.LogError(ex, "Erro ao atualizar usuário em {ElapsedMilliseconds}ms",
+                        stopwatch.ElapsedMilliseconds);
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Deleta um usuário.
+        /// </summary>
+        public async Task DeleteUserAsync(int id)
+        {
+            using (StructuredLogging.BeginOperationScope("DeleteUser", id))
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                try
+                {
+                    _logger.LogInformation("Deletando usuário: {UserId}", id);
+
+                    var user = await _unitOfWork.Users.GetByIdAsync(id);
+                    if (user == null)
+                    {
+                        _logger.LogWarning("Usuário não encontrado: {UserId}", id);
+                        throw new KeyNotFoundException($"Usuário com ID {id} não encontrado");
+                    }
+
+                    await _unitOfWork.Users.DeleteAsync(id);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    stopwatch.Stop();
+                    _logger.LogInformation("Usuário deletado com sucesso em {ElapsedMilliseconds}ms",
+                        stopwatch.ElapsedMilliseconds);
+                }
+                catch (Exception ex)
+                {
+                    stopwatch.Stop();
+                    _logger.LogError(ex, "Erro ao deletar usuário em {ElapsedMilliseconds}ms",
+                        stopwatch.ElapsedMilliseconds);
                     throw;
                 }
             }

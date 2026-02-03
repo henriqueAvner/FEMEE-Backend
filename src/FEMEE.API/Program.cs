@@ -1,7 +1,6 @@
-
 using FEMEE.API.Configuration;
-using FEMEE.Application.Logging;
 using FEMEE.API.Middleware;
+using FEMEE.Application.Configurations;
 using FEMEE.Application.DTOs.Auth;
 using FEMEE.Application.DTOs.InscricaoCampeonato;
 using FEMEE.Application.DTOs.Jogador;
@@ -10,7 +9,11 @@ using FEMEE.Application.DTOs.Partida;
 using FEMEE.Application.DTOs.Produto;
 using FEMEE.Application.DTOs.Time;
 using FEMEE.Application.DTOs.User;
+using FEMEE.Application.Interfaces.Common;
+using FEMEE.Application.Interfaces.Repositories;
+using FEMEE.Application.Interfaces.Services;
 using FEMEE.Application.Mappings;
+using FEMEE.Application.Services;
 using FEMEE.Application.Services.Auth;
 using FEMEE.Application.Validators.InscricaoCampeonato;
 using FEMEE.Application.Validators.Jogador;
@@ -19,22 +22,18 @@ using FEMEE.Application.Validators.Partida;
 using FEMEE.Application.Validators.Produto;
 using FEMEE.Application.Validators.Time;
 using FEMEE.Application.Validators.User;
-using FEMEE.Application.Interfaces.Repositories;
+using FEMEE.Domain.Interfaces;
 using FEMEE.Infrastructure.Data;
 using FEMEE.Infrastructure.Data.Context;
 using FEMEE.Infrastructure.Data.Repositories;
 using FEMEE.Infrastructure.Extensions;
 using FEMEE.Infrastructure.Security;
-using FEMEE.Application.Services;
-using FEMEE.Application.Configurations;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
-using FEMEE.Application.Interfaces.Services;
-using FEMEE.Application.Interfaces.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,6 +77,15 @@ builder.Services.AddScoped<IValidator<UpdateProdutoDto>, UpdateProdutoDtoValidat
 builder.Services.AddScoped<IValidator<CreateInscricaoCampeonatoDto>, CreateInscricaoCampeonatoDtoValidator>();
 //Noticia
 builder.Services.AddScoped<IValidator<CreateNoticiaDto>, CreateNoticiaDtoValidator>();
+
+// ===== SERVIÇOS =====
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITimeService, TimeService>();
+builder.Services.AddScoped<ICampeonatoService, CampeonatoService>();
+builder.Services.AddScoped<IPartidaService, PartidaService>();
+builder.Services.AddScoped<IJogadorService, JogadorService>();
+builder.Services.AddScoped<INoticiaService, NoticiaService>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
 
 
 
