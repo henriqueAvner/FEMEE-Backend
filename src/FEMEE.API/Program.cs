@@ -25,7 +25,7 @@ using FEMEE.Infrastructure.Data.Repositories;
 using FEMEE.Infrastructure.Extensions;
 using FEMEE.Infrastructure.Security;
 using FEMEE.Application.Services;
-using FEMEE.Infrastructure.Security.Settings;
+using FEMEE.Application.Configurations;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;

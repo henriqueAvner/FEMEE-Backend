@@ -1,7 +1,7 @@
 using FEMEE.Domain.Entities.Principal;
 using FEMEE.Application.Interfaces.Repositories;
 using FEMEE.Application.Interfaces.Services;
-using FEMEE.Infrastructure.Security.Settings;
+using FEMEE.Application.Configurations;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;

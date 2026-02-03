@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-// FEMEE.Infrastructure/Security/Settings/JwtSettings.cs
-
-namespace FEMEE.Infrastructure.Security.Settings
+namespace FEMEE.Application.Configurations
 {
     public class JwtSettings
     {
@@ -13,21 +9,21 @@ namespace FEMEE.Infrastructure.Security.Settings
         /// IMPORTANTE: Deve ter pelo menos 32 caracteres para segurança.
         /// Nunca deve ser hardcoded - usar variáveis de ambiente.
         /// </summary>
-        public string SecretKey { get; set; }
+        public string SecretKey { get; set; } = string.Empty;
 
         /// <summary>
         /// Issuer (emissor) do token.
         /// Identifica quem emitiu o token.
         /// Exemplo: "https://femee-api.com"
         /// </summary>
-        public string Issuer { get; set; }
+        public string Issuer { get; set; } = string.Empty;
 
         /// <summary>
         /// Audience (audiência ) do token.
         /// Identifica para quem o token foi emitido.
         /// Exemplo: "femee-frontend"
         /// </summary>
-        public string Audience { get; set; }
+        public string Audience { get; set; } = string.Empty;
 
         /// <summary>
         /// Tempo de expiração do token em minutos.
