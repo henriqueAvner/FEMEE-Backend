@@ -1,19 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FEMEE.Domain.Entities.Campeonatos;
+using FEMEE.Application.DTOs.Campeonato;
+using FEMEE.Domain.Enums;
 
 namespace FEMEE.Application.Interfaces.Services
 {
+    /// <summary>
+    /// Interface para o serviço de campeonatos.
+    /// </summary>
     public interface ICampeonatoService
     {
-        Task<Campeonato> CriarCampeonatoAsync(Campeonato campeonato);
-        Task<InscricaoCampeonato> InscreverTimeAsync(int campeonatoId, int timeId, 
-        int capitaoId);
-        Task AprovarInscricaoAsync(int inscricaoId);
-        Task RejeitarInscricaoAsync(int inscricaoId, string motivo);
-        Task FinalizarCampeonatoAsync(int campeonatoId);
-        Task<IEnumerable<Time>> GetRankingAsync(int campeonatoId);
+        Task<CampeonatoResponseDto> GetCampeonatoByIdAsync(int id);
+        Task<IEnumerable<CampeonatoResponseDto>> GetAllCampeonatosAsync();
+        Task<IEnumerable<CampeonatoResponseDto>> GetCampeonatosByStatusAsync(StatusCampeonato status);
+        Task<CampeonatoResponseDto> CreateCampeonatoAsync(CreateCampeonatoDto dto);
+        Task<CampeonatoResponseDto> UpdateCampeonatoAsync(int id, UpdateCampeonatoDto dto);
+        Task DeleteCampeonatoAsync(int id);
     }
 }
