@@ -1,6 +1,6 @@
 using Serilog.Context;
 
-namespace FEMEE.API.Configuration
+namespace FEMEE.Application.Logging
 {
     /// <summary>
     /// Classe auxiliar para logging estruturado com contexto.

@@ -5,6 +5,7 @@ using FEMEE.Application.Interfaces.Repositories;
 using FEMEE.Application.Interfaces.Services;
 using FEMEE.Application.Interfaces.Common;
 using Microsoft.Extensions.Logging;
+using FEMEE.Application.Logging;
 using System.Diagnostics;
 
 namespace FEMEE.Application.Services

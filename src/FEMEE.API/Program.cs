@@ -1,5 +1,6 @@
 
 using FEMEE.API.Configuration;
+using FEMEE.Application.Logging;
 using FEMEE.API.Middleware;
 using FEMEE.Application.DTOs.Auth;
 using FEMEE.Application.DTOs.InscricaoCampeonato;
