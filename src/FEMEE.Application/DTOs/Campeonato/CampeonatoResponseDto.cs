@@ -16,12 +16,12 @@ namespace FEMEE.Application.DTOs.Campeonato
         /// <summary>
         /// Título do campeonato.
         /// </summary>
-        public string Titulo { get; set; }
+        public string? Titulo { get; set; }
 
         /// <summary>
         /// Descrição do campeonato.
         /// </summary>
-        public string Descricao { get; set; }
+        public string? Descricao { get; set; }
 
         /// <summary>
         /// Data de início.
@@ -36,17 +36,17 @@ namespace FEMEE.Application.DTOs.Campeonato
         /// <summary>
         /// Local do campeonato.
         /// </summary>
-        public string Local { get; set; }
+        public string? Local { get; set; }
 
         /// <summary>
         /// Cidade.
         /// </summary>
-        public string Cidade { get; set; }
+        public string? Cidade { get; set; }
 
         /// <summary>
         /// Estado.
         /// </summary>
-        public string Estado { get; set; }
+        public string? Estado { get; set; }
 
         /// <summary>
         /// Premiação total.
@@ -71,6 +71,6 @@ namespace FEMEE.Application.DTOs.Campeonato
         /// <summary>
         /// Informações do jogo.
         /// </summary>
-        public JogoResponseDto Jogo { get; set; }
+        public JogoResponseDto? Jogo { get; set; }
     }
 }

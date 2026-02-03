@@ -8,12 +8,12 @@ namespace FEMEE.Application.DTOs.Campeonato
         /// <summary>
         /// Novo título.
         /// </summary>
-        public string Titulo { get; set; }
+        public string? Titulo { get; set; }
 
         /// <summary>
         /// Nova descrição.
         /// </summary>
-        public string Descricao { get; set; }
+        public string? Descricao { get; set; }
 
         /// <summary>
         /// Data de início do campeonato.
@@ -43,11 +43,11 @@ namespace FEMEE.Application.DTOs.Campeonato
         /// <summary>
         /// Novo local.
         /// </summary>
-        public string Local { get; set; }
+        public string? Local { get; set; }
 
         /// <summary>
         /// Novo regulamento URL.
         /// </summary>
-        public string RegulamentoUrl { get; set; }
+        public string? RegulamentoUrl { get; set; }
     }
 }

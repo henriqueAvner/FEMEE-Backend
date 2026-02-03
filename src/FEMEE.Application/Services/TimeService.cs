@@ -201,7 +201,7 @@ namespace FEMEE.Application.Services
                     }
 
                     _mapper.Map(dto, time);
-                    time.DataAtualizacao = DateTime.UtcNow;
+                    time.UpdatedAt = DateTime.UtcNow;
 
                     await _unitOfWork.Times.UpdateAsync(time);
                     await _unitOfWork.SaveChangesAsync();

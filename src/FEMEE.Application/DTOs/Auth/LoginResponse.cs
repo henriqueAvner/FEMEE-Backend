@@ -13,13 +13,13 @@ namespace FEMEE.Application.DTOs.Auth
         /// <summary>
         /// Token JWT para autenticação.
         /// </summary>
-        public string Token { get; set; }
+        public string? Token { get; set; }
 
         public int UserId { get; set; }
 
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
-        public string Nome { get; set; }
+        public string? Nome { get; set; }
 
         /// <summary>
         /// Tipo de usuário (Admin, Capitao, Jogador).
