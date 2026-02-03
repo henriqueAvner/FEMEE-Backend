@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FEMEE.Domain.Entities.Campeonatos;
 
-namespace FEMEE.Domain.Interfaces
+namespace FEMEE.Application.Interfaces.Services
 {
     public interface ICampeonatoService
     {

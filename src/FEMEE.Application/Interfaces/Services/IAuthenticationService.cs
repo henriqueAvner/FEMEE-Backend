@@ -1,6 +1,6 @@
 using FEMEE.Domain.Entities.Principal;
 
-namespace FEMEE.Domain.Interfaces
+namespace FEMEE.Application.Interfaces.Services
 {
     public interface IAuthenticationService
     {

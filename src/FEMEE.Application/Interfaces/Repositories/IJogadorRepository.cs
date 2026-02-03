@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FEMEE.Domain.Entities.Principal;
 using FEMEE.Domain.Enums;
 
-namespace FEMEE.Domain.Interfaces
+namespace FEMEE.Application.Interfaces.Repositories
 {
     public interface IJogadorRepository : IRepository<Jogador>
     {

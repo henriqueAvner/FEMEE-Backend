@@ -1,5 +1,6 @@
 using FEMEE.Domain.Entities.Principal;
-using FEMEE.Domain.Interfaces;
+using FEMEE.Application.Interfaces.Repositories;
+using FEMEE.Application.Interfaces.Services;
 using FEMEE.Infrastructure.Security.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -9,7 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace FEMEE.Infrastructure.Security.Services
+namespace FEMEE.Application.Services
 {
     public class AuthenticationService : IAuthenticationService
     {

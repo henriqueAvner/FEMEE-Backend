@@ -6,7 +6,7 @@ using FEMEE.Domain.Entities.Campeonatos;
 using FEMEE.Domain.Entities.Principal;
 using FEMEE.Domain.Entities.Store;
 
-namespace FEMEE.Domain.Interfaces
+namespace FEMEE.Application.Interfaces.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FEMEE.Domain.Entities.Campeonatos;
-using FEMEE.Domain.Interfaces;
+using FEMEE.Application.Interfaces.Repositories;
 using FEMEE.Infrastructure.Data.Context;
 using Microsoft.EntityFrameworkCore;
 

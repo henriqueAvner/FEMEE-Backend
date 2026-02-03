@@ -1,102 +1,108 @@
-// FEMEE.Application/Services/UserService.cs
-
 using AutoMapper;
 using FEMEE.API.Configuration;
 using FEMEE.Application.DTOs.User;
 using FEMEE.Domain.Entities.Principal;
-using FEMEE.Domain.Interfaces;
+using FEMEE.Application.Interfaces.Repositories;
+using FEMEE.Application.Interfaces.Services;
+using FEMEE.Application.Interfaces.Common;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-public class UserService : IUserService
+namespace FEMEE.Application.Services
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ILogger<UserService> _logger;
-
-    public UserService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<UserService> logger)
+    public class UserService : IUserService
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _logger = logger;
-    }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly ILogger<UserService> _logger;
+        private readonly IPasswordHasher _passwordHasher;
 
-    public async Task<UserResponseDto> GetUserByIdAsync(int id)
-    {
-        // ===== USAR ESCOPO DE LOGGING =====
-        using (StructuredLogging.BeginOperationScope("GetUserById", id))
+        public UserService(
+            IUnitOfWork unitOfWork, 
+            IMapper mapper, 
+            ILogger<UserService> logger,
+            IPasswordHasher passwordHasher)
         {
-            var stopwatch = Stopwatch.StartNew();
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _logger = logger;
+            _passwordHasher = passwordHasher;
+        }
 
-            try
+        public async Task<UserResponseDto> GetUserByIdAsync(int id)
+        {
+            using (StructuredLogging.BeginOperationScope("GetUserById", id))
             {
-                _logger.LogInformation("Buscando usuário com ID: {UserId}", id);
+                var stopwatch = Stopwatch.StartNew();
 
-                var user = await _unitOfWork.Users.GetByIdAsync(id);
-
-                if (user == null)
+                try
                 {
-                    _logger.LogWarning("Usuário não encontrado: {UserId}", id);
-                    throw new KeyNotFoundException($"Usuário com ID {id} não encontrado");
+                    _logger.LogInformation("Buscando usuário com ID: {UserId}", id);
+
+                    var user = await _unitOfWork.Users.GetByIdAsync(id);
+
+                    if (user == null)
+                    {
+                        _logger.LogWarning("Usuário não encontrado: {UserId}", id);
+                        throw new KeyNotFoundException($"Usuário com ID {id} não encontrado");
+                    }
+
+                    stopwatch.Stop();
+                    _logger.LogInformation("Usuário encontrado em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
+
+                    return _mapper.Map<UserResponseDto>(user);
                 }
-
-                stopwatch.Stop();
-                _logger.LogInformation("Usuário encontrado em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
-
-                return _mapper.Map<UserResponseDto>(user);
-            }
-            catch (Exception ex)
-            {
-                stopwatch.Stop();
-                _logger.LogError(ex, "Erro ao buscar usuário em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
-                throw;
+                catch (Exception ex)
+                {
+                    stopwatch.Stop();
+                    _logger.LogError(ex, "Erro ao buscar usuário em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
+                    throw;
+                }
             }
         }
-    }
 
-    public async Task<UserResponseDto> CreateUserAsync(CreateUserDto dto)
-    {
-        // ===== USAR ESCOPO DE LOGGING =====
-        using (StructuredLogging.BeginOperationScope("CreateUser"))
+        public async Task<UserResponseDto> CreateUserAsync(CreateUserDto dto)
         {
-            StructuredLogging.AddEntityContext("User", 0);
-
-            var stopwatch = Stopwatch.StartNew();
-
-            try
+            using (StructuredLogging.BeginOperationScope("CreateUser"))
             {
-                _logger.LogInformation("Iniciando criação de usuário: {Email}", dto.Email);
+                StructuredLogging.AddEntityContext("User", 0);
 
-                // Verificar se email já existe
-                var users = await _unitOfWork.Users.GetAllAsync();
-                if (users.Any(u => u.Email == dto.Email))
+                var stopwatch = Stopwatch.StartNew();
+
+                try
                 {
-                    _logger.LogWarning("Email já cadastrado: {Email}", dto.Email);
-                    throw new InvalidOperationException("Email já cadastrado");
+                    _logger.LogInformation("Iniciando criação de usuário: {Email}", dto.Email);
+
+                    var users = await _unitOfWork.Users.GetAllAsync();
+                    if (users.Any(u => u.Email == dto.Email))
+                    {
+                        _logger.LogWarning("Email já cadastrado: {Email}", dto.Email);
+                        throw new InvalidOperationException("Email já cadastrado");
+                    }
+
+                    var user = _mapper.Map<User>(dto);
+                    user.Senha = _passwordHasher.HashPassword(dto.Senha);
+                    user.DataCriacao = DateTime.UtcNow;
+                    user.DataAtualizacao = DateTime.UtcNow;
+
+                    _logger.LogDebug("Usuário mapeado e senha hasheada");
+
+                    await _unitOfWork.Users.AddAsync(user);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    stopwatch.Stop();
+                    _logger.LogInformation("Usuário criado com sucesso em {ElapsedMilliseconds}ms: {UserId}",
+                        stopwatch.ElapsedMilliseconds, user.Id);
+
+                    return _mapper.Map<UserResponseDto>(user);
                 }
-
-                var user = _mapper.Map<User>(dto);
-                user.SenhaHash = PasswordHasher.HashPassword(dto.Senha);
-                user.DataCriacao = DateTime.UtcNow;
-                user.DataAtualizacao = DateTime.UtcNow;
-
-                _logger.LogDebug("Usuário mapeado e senha hasheada");
-
-                await _unitOfWork.Users.AddAsync(user);
-                await _unitOfWork.SaveChangesAsync();
-
-                stopwatch.Stop();
-                _logger.LogInformation("Usuário criado com sucesso em {ElapsedMilliseconds}ms: {UserId}",
-                    stopwatch.ElapsedMilliseconds, user.Id);
-
-                return _mapper.Map<UserResponseDto>(user);
-            }
-            catch (Exception ex)
-            {
-                stopwatch.Stop();
-                _logger.LogError(ex, "Erro ao criar usuário em {ElapsedMilliseconds}ms: {Email}",
-                    stopwatch.ElapsedMilliseconds, dto.Email);
-                throw;
+                catch (Exception ex)
+                {
+                    stopwatch.Stop();
+                    _logger.LogError(ex, "Erro ao criar usuário em {ElapsedMilliseconds}ms: {Email}",
+                        stopwatch.ElapsedMilliseconds, dto.Email);
+                    throw;
+                }
             }
         }
     }

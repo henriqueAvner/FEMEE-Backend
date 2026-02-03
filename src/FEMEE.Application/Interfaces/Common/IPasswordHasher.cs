@@ -1,4 +1,4 @@
-namespace FEMEE.Domain.Interfaces
+namespace FEMEE.Application.Interfaces.Common
 {
     public interface IPasswordHasher
     {

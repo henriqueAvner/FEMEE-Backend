@@ -1,4 +1,4 @@
-using FEMEE.Domain.Interfaces;
+using FEMEE.Application.Interfaces.Common;
 
 namespace FEMEE.Infrastructure.Security
 {

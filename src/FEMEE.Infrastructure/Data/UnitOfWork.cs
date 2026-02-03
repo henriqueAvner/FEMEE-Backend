@@ -3,7 +3,7 @@
 using FEMEE.Domain.Entities.Campeonatos;
 using FEMEE.Domain.Entities.Principal;
 using FEMEE.Domain.Entities.Store;
-using FEMEE.Domain.Interfaces;
+using FEMEE.Application.Interfaces.Repositories;
 using FEMEE.Infrastructure.Data.Context;
 using FEMEE.Infrastructure.Data.Repositories;
 

@@ -1,6 +1,6 @@
 using FEMEE.Domain.Entities.Campeonatos;
 using FEMEE.Domain.Enums;
-using FEMEE.Domain.Interfaces;
+using FEMEE.Application.Interfaces.Repositories;
 using FEMEE.Infrastructure.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using System;

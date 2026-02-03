@@ -5,7 +5,7 @@ using System.Security;
 using System.Threading.Tasks;
 using FEMEE.Domain.Enums;
 
-namespace FEMEE.Domain.Interfaces
+namespace FEMEE.Application.Interfaces.Services
 {
     public interface IAuthorizationService
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FEMEE.Domain.Interfaces.IService
+namespace FEMEE.Application.Interfaces.Services
 {
     public interface ICacheService
     {

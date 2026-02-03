@@ -18,13 +18,13 @@ using FEMEE.Application.Validators.Partida;
 using FEMEE.Application.Validators.Produto;
 using FEMEE.Application.Validators.Time;
 using FEMEE.Application.Validators.User;
-using FEMEE.Domain.Interfaces;
+using FEMEE.Application.Interfaces.Repositories;
 using FEMEE.Infrastructure.Data;
 using FEMEE.Infrastructure.Data.Context;
 using FEMEE.Infrastructure.Data.Repositories;
 using FEMEE.Infrastructure.Extensions;
 using FEMEE.Infrastructure.Security;
-using FEMEE.Infrastructure.Security.Services;
+using FEMEE.Application.Services;
 using FEMEE.Infrastructure.Security.Settings;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -88,6 +88,7 @@ if (string.IsNullOrWhiteSpace(jwtSettings.SecretKey) || jwtSettings.SecretKey.Le
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));

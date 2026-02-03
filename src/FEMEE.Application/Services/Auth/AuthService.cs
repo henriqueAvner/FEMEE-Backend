@@ -1,6 +1,8 @@
 using FEMEE.Application.DTOs.Auth;
 using FEMEE.Domain.Entities.Principal;
-using FEMEE.Domain.Interfaces;
+using FEMEE.Application.Interfaces.Repositories;
+using FEMEE.Application.Interfaces.Services;
+using FEMEE.Application.Interfaces.Common;
 
 namespace FEMEE.Application.Services.Auth
 {
