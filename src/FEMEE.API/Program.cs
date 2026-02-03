@@ -32,6 +32,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using FEMEE.Application.Interfaces.Services;
+using FEMEE.Application.Interfaces.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 

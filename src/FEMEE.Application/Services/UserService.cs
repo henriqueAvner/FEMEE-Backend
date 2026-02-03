@@ -1,5 +1,4 @@
 using AutoMapper;
-using FEMEE.API.Configuration;
 using FEMEE.Application.DTOs.User;
 using FEMEE.Domain.Entities.Principal;
 using FEMEE.Application.Interfaces.Repositories;
