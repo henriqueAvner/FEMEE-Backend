@@ -11,12 +11,12 @@ namespace FEMEE.Application.DTOs.User
         /// <summary>
         /// Novo nome do usuário.
         /// </summary>
-        public string Nome { get; set; }
+        public string Nome { get; set; } = null!;
 
         /// <summary>
         /// Novo telefone do usuário.
         /// </summary>
-        public string Telefone { get; set; }
+        public string Telefone { get; set; } = null!;
 
         /// <summary>
         /// Tipo de usuário (Admin, Capitao, Jogador).

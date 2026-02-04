@@ -39,8 +39,10 @@ namespace FEMEE.Application.Mappings
             CreateMap<UpdateTimeDto, Time>();
 
             // ===== JOGADOR =====
+            // Jogador usa composição com User (não herança)
             CreateMap<Jogador, JogadorResponseDto>()
-                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.Nome));
+                .ForMember(dest => dest.NomeCompleto, opt => opt.MapFrom(src => src.User != null ? src.User.Nome : string.Empty))
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User));
             CreateMap<CreateJogadorDto, Jogador>();
             CreateMap<UpdateJogadorDto, Jogador>();
 
@@ -71,13 +73,21 @@ namespace FEMEE.Application.Mappings
 
             // ===== JOGO =====
             CreateMap<Jogo, JogoResponseDto>().ReverseMap();
+            CreateMap<CreateJogoDto, Jogo>();
+            CreateMap<UpdateJogoDto, Jogo>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // ===== CONQUISTA =====
             CreateMap<Conquista, ConquistaResponseDto>().ReverseMap();
+            CreateMap<CreateConquistaDto, Conquista>();
+            CreateMap<UpdateConquistaDto, Conquista>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // ===== INSCRICAO CAMPEONATO =====
             CreateMap<InscricaoCampeonato, InscricaoCampeonatoResponseDto>().ReverseMap();
             CreateMap<CreateInscricaoCampeonatoDto, InscricaoCampeonato>();
+            CreateMap<UpdateInscricaoCampeonatoDto, InscricaoCampeonato>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

@@ -13,12 +13,12 @@ namespace FEMEE.Application.DTOs.Produto
         /// <summary>
         /// Nome do produto.
         /// </summary>
-        public string Nome { get; set; }
+            public string Nome { get; set; } = null!;
 
         /// <summary>
         /// Descrição.
         /// </summary>
-        public string Descricao { get; set; }
+            public string Descricao { get; set; } = null!;
 
         /// <summary>
         /// Preço.
@@ -28,12 +28,12 @@ namespace FEMEE.Application.DTOs.Produto
         /// <summary>
         /// URL da imagem.
         /// </summary>
-        public string ImagemUrl { get; set; }
+            public string ImagemUrl { get; set; } = null!;
 
         /// <summary>
         /// Categoria.
         /// </summary>
-        public string Categoria { get; set; }
+            public string Categoria { get; set; } = null!;
 
         /// <summary>
         /// Quantidade em estoque.

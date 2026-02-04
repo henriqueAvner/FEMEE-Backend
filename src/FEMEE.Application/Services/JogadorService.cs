@@ -120,8 +120,8 @@ namespace FEMEE.Application.Services
                     _logger.LogInformation("Criando novo jogador: {NickName}", dto.NickName);
 
                     var jogador = _mapper.Map<Jogador>(dto);
-                    jogador.DataCriacao = DateTime.UtcNow;
-                    jogador.DataAtualizacao = DateTime.UtcNow;
+                    jogador.DataEntradaTime = DateTime.UtcNow;
+                    jogador.Status = Domain.Enums.StatusJogador.Ativo;
 
                     await _unitOfWork.Jogadores.AddAsync(jogador);
                     await _unitOfWork.SaveChangesAsync();
@@ -158,8 +158,20 @@ namespace FEMEE.Application.Services
                         throw new KeyNotFoundException($"Jogador com ID {id} não encontrado");
                     }
 
-                    _mapper.Map(dto, jogador);
-                    jogador.DataAtualizacao = DateTime.UtcNow;
+                    // Atualiza apenas campos fornecidos
+                    if (!string.IsNullOrEmpty(dto.NickName))
+                        jogador.NickName = dto.NickName;
+                    if (dto.FotoUrl != null)
+                        jogador.FotoUrl = dto.FotoUrl;
+                    if (dto.Funcao.HasValue)
+                        jogador.Funcao = dto.Funcao.Value;
+                    if (dto.Status.HasValue)
+                        jogador.Status = dto.Status.Value;
+                    if (dto.TimeId.HasValue)
+                    {
+                        jogador.TimeId = dto.TimeId;
+                        jogador.DataEntradaTime = DateTime.UtcNow;
+                    }
 
                     await _unitOfWork.Jogadores.UpdateAsync(jogador);
                     await _unitOfWork.SaveChangesAsync();

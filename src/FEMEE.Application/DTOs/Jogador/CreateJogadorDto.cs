@@ -8,19 +8,24 @@ namespace FEMEE.Application.DTOs.Jogador
     public class CreateJogadorDto
     {
         /// <summary>
-        /// ID do time ao qual o jogador pertence.
+        /// ID do usuário (conta) associado ao jogador.
         /// </summary>
-        public int TimeId { get; set; }
+        public int UserId { get; set; }
+
+        /// <summary>
+        /// ID do time ao qual o jogador pertence (opcional).
+        /// </summary>
+        public int? TimeId { get; set; }
 
         /// <summary>
         /// Nickname do jogador (deve ser único).
         /// </summary>
-        public string NickName { get; set; }
+        public string NickName { get; set; } = null!;
 
         /// <summary>
-        /// Nome completo do jogador.
+        /// URL da foto do jogador.
         /// </summary>
-        public string NomeCompleto { get; set; }
+        public string? FotoUrl { get; set; }
 
         /// <summary>
         /// Função do jogador no time (Suporte, Carry, Mid, etc).

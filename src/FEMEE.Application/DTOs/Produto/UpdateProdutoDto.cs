@@ -8,12 +8,12 @@ namespace FEMEE.Application.DTOs.Produto
         /// <summary>
         /// Novo nome.
         /// </summary>
-        public string Nome { get; set; }
+        public string Nome { get; set; } = null!;
 
         /// <summary>
         /// Nova descrição.
         /// </summary>
-        public string Descricao { get; set; }
+        public string Descricao { get; set; } = null!;
 
         /// <summary>
         /// Novo preço.
@@ -23,7 +23,7 @@ namespace FEMEE.Application.DTOs.Produto
         /// <summary>
         /// Nova imagem.
         /// </summary>
-        public string ImagemUrl { get; set; }
+        public string ImagemUrl { get; set; } = null!;
 
         /// <summary>
         /// Novo estoque.

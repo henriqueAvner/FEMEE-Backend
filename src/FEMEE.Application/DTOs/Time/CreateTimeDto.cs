@@ -8,18 +8,18 @@ namespace FEMEE.Application.DTOs.Time
         /// <summary>
         /// Nome do time.
         /// </summary>
-        public string Nome { get; set; }
+        public string Nome { get; set; } = null!;
 
         /// <summary>
         /// Slug do time (URL-friendly).
         /// Exemplo: "thunder-gaming"
         /// </summary>
-        public string Slug { get; set; }
+        public string Slug { get; set; } = null!;
 
         /// <summary>
         /// URL do logo do time.
         /// </summary>
-        public string LogoUrl { get; set; }
+        public string LogoUrl { get; set; } = null!;
 
         /// <summary>
         /// Data de fundação do time.
@@ -29,6 +29,6 @@ namespace FEMEE.Application.DTOs.Time
         /// <summary>
         /// Descrição do time.
         /// </summary>
-        public string Descricao { get; set; }
+        public string Descricao { get; set; } = null!;
     }
 }

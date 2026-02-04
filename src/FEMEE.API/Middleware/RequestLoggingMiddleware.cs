@@ -35,7 +35,7 @@ namespace FEMEE.API.Middleware
 
             // Ler o corpo da requisição se for POST/PUT
             string requestBody = "";
-            if (request.ContentLength > 0 && IsRequestBodyLoggable(request.ContentType))
+            if (request.ContentLength > 0 && IsRequestBodyLoggable(request.ContentType ?? string.Empty))
             {
                 request.EnableBuffering();
                 using (var reader = new StreamReader(request.Body, leaveOpen: true))

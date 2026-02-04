@@ -52,12 +52,18 @@ namespace FEMEE.API.Controllers
 
             try
             {
-                var user = await _userService.GetUserByEmailAsync(request.Email);
+                if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Senha))
+                    return BadRequest("Email e senha são obrigatórios");
 
-                if (!_passwordHasher.VerifyPassword(request.Senha, user.SenhaHash))
+                var user = await _userService.GetUserEntityByEmailAsync(request.Email);
+
+                if (string.IsNullOrWhiteSpace(user?.Senha))
                     return Unauthorized("Email ou senha inválidos");
 
-                var token = await _authService.GenerateTokenAsync(request.Email);
+                if (!_passwordHasher.VerifyPassword(request.Senha, user.Senha))
+                    return Unauthorized("Email ou senha inválidos");
+
+                var token = await _authService.GenerateTokenAsync(user);
 
                 return Ok(new LoginResponse
                 {
@@ -88,10 +94,10 @@ namespace FEMEE.API.Controllers
             {
                 var createUserDto = new FEMEE.Application.DTOs.User.CreateUserDto
                 {
-                    Nome = request.Nome,
-                    Email = request.Email,
-                    Senha = request.Senha,
-                    Telefone = request.Telefone,
+                    Nome = request.Nome ?? string.Empty,
+                    Email = request.Email ?? string.Empty,
+                    Senha = request.Senha ?? string.Empty,
+                    Telefone = request.Telefone ?? string.Empty,
                     TipoUsuario = FEMEE.Domain.Enums.TipoUsuario.Jogador
                 };
 
@@ -115,7 +121,10 @@ namespace FEMEE.API.Controllers
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
                 return Unauthorized();
 
-            var user = await _userService.GetUserByIdAsync(userId);
+                var user = await _userService.GetUserByIdAsync(userId);
+                if (user == null)
+                    return NotFound();
+
             return Ok(user);
         }
     }

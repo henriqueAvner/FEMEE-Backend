@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FEMEE.Application.Interfaces.Repositories;
 using FEMEE.Infrastructure.Data.Context;
@@ -34,9 +35,9 @@ namespace FEMEE.Infrastructure.Data.Repositories
             return await _dbSet.Skip(skip).Take(pageSize).ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> FindAsync(Func<T, bool> predicate)
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
-            return await Task.FromResult(_dbSet.Where(predicate).ToList());
+            return await _dbSet.Where(predicate).ToListAsync();
         }
 
         public async Task<T?> GetByIdAsync(int id)

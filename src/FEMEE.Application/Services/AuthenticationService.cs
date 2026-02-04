@@ -32,13 +32,13 @@ namespace FEMEE.Application.Services
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
+                var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey ?? string.Empty);
 
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Name, user.Nome),
+                    new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+                    new Claim(ClaimTypes.Name, user.Nome ?? string.Empty),
                     new Claim("TipoUsuario", user.TipoUsuario.ToString()),
                     new Claim("iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
                 };
@@ -47,8 +47,8 @@ namespace FEMEE.Application.Services
                 {
                    Subject = new ClaimsIdentity(claims),
                    Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationMinutes),
-                   Issuer = _jwtSettings.Issuer,
-                   Audience = _jwtSettings.Audience,
+                   Issuer = _jwtSettings.Issuer ?? string.Empty,
+                   Audience = _jwtSettings.Audience ?? string.Empty,
                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
 

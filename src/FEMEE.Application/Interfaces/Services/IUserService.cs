@@ -31,6 +31,13 @@ namespace FEMEE.Application.Interfaces.Services
         Task<UserResponseDto> GetUserByEmailAsync(string email);
 
         /// <summary>
+        /// Obtém a entidade de domínio `User` pelo email (usado internamente para autenticação).
+        /// </summary>
+        /// <param name="email">Email do usuário</param>
+        /// <returns>Entidade de domínio User</returns>
+        Task<FEMEE.Domain.Entities.Principal.User> GetUserEntityByEmailAsync(string email);
+
+        /// <summary>
         /// Cria um novo usuário.
         /// </summary>
         /// <param name="dto">DTO de criação de usuário</param>

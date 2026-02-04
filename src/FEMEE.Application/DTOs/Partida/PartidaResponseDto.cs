@@ -21,17 +21,17 @@ namespace FEMEE.Application.DTOs.Partida
         /// <summary>
         /// Informações do time A (mandante).
         /// </summary>
-        public TimeResponseDto TimeA { get; set; }
+        public TimeResponseDto TimeA { get; set; } = null!;
 
         /// <summary>
         /// Informações do time B (visitante).
         /// </summary>
-        public TimeResponseDto TimeB { get; set; }
+        public TimeResponseDto TimeB { get; set; } = null!;
 
         /// <summary>
         /// Informações do time vencedor (se houver).
         /// </summary>
-        public TimeResponseDto TimeVencedor { get; set; }
+        public TimeResponseDto TimeVencedor { get; set; } = null!;
 
         /// <summary>
         /// Data e hora da partida.
@@ -41,7 +41,7 @@ namespace FEMEE.Application.DTOs.Partida
         /// <summary>
         /// Local da partida.
         /// </summary>
-        public string Local { get; set; }
+        public string Local { get; set; } = null!;
 
         /// <summary>
         /// Fase da partida.
@@ -66,6 +66,6 @@ namespace FEMEE.Application.DTOs.Partida
         /// <summary>
         /// URL da transmissão.
         /// </summary>
-        public string TransmissaoUrl { get; set; }
+        public string TransmissaoUrl { get; set; } = null!;
     }
 }

@@ -103,11 +103,22 @@ namespace FEMEE.Infrastructure.Data.Context
         {
             modelBuilder.Entity<Jogador>(jogador =>
             {
-               
+                // Relacionamento com User (composição)
+                jogador.HasOne(j => j.User)
+                    .WithMany()
+                    .HasForeignKey(j => j.UserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_JOGADOR_USER");
+
                 // Índice único para nickname
                 jogador.HasIndex(e => e.NickName)
                     .IsUnique()
                     .HasDatabaseName("IX_JOGADOR_NICKNAME_UNIQUE");
+
+                // Índice para UserId (1 jogador por user)
+                jogador.HasIndex(e => e.UserId)
+                    .IsUnique()
+                    .HasDatabaseName("IX_JOGADOR_USERID_UNIQUE");
 
                 // Índice composto para queries por time
                 jogador.HasIndex(e => new { e.TimeId, e.Status })

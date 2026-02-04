@@ -40,6 +40,6 @@ namespace FEMEE.Application.DTOs.Partida
         /// <summary>
         /// URL da transmissão (se houver).
         /// </summary>
-        public string TransmissaoUrl { get; set; }
+        public string TransmissaoUrl { get; set; } = null!;
     }
 }

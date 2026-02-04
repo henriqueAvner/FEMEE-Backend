@@ -10,16 +10,26 @@ namespace FEMEE.Application.DTOs.Jogador
         /// <summary>
         /// Novo nickname.
         /// </summary>
-        public string NickName { get; set; }
+        public string? NickName { get; set; }
 
         /// <summary>
-        /// Novo nome completo.
+        /// URL da foto.
         /// </summary>
-        public string NomeCompleto { get; set; }
+        public string? FotoUrl { get; set; }
 
         /// <summary>
         /// Nova função.
         /// </summary>
-        public FuncaoJogador Funcao { get; set; }
+        public FuncaoJogador? Funcao { get; set; }
+
+        /// <summary>
+        /// Novo status.
+        /// </summary>
+        public StatusJogador? Status { get; set; }
+
+        /// <summary>
+        /// Novo time.
+        /// </summary>
+        public int? TimeId { get; set; }
     }
 }

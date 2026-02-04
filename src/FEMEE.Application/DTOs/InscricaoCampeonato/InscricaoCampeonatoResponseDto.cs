@@ -40,6 +40,6 @@ namespace FEMEE.Application.DTOs.InscricaoCampeonato
         /// <summary>
         /// Observações sobre a inscrição.
         /// </summary>
-        public string Observacoes { get; set; }
+        public string Observacoes { get; set; } = null!;
     }
 }

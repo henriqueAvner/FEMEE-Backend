@@ -14,10 +14,10 @@ namespace FEMEE.Application.Validators.Jogador
         /// </summary>
         public CreateJogadorDtoValidator()
         {
-            // ===== VALIDAR TIME ID =====
-            RuleFor(x => x.TimeId)
+            // ===== VALIDAR USER ID =====
+            RuleFor(x => x.UserId)
                 .GreaterThan(0)
-                    .WithMessage("Time é obrigatório");
+                    .WithMessage("Usuário é obrigatório");
 
             // ===== VALIDAR NICKNAME =====
             RuleFor(x => x.NickName)
@@ -27,13 +27,6 @@ namespace FEMEE.Application.Validators.Jogador
                     .WithMessage("Nickname deve ter entre 3 e 50 caracteres")
                 .Matches(@"^[a-zA-Z0-9_-]+$")
                     .WithMessage("Nickname deve conter apenas letras, números, hífens e underscores");
-
-            // ===== VALIDAR NOME COMPLETO =====
-            RuleFor(x => x.NomeCompleto)
-                .NotEmpty()
-                    .WithMessage("Nome completo é obrigatório")
-                .Length(3, 256)
-                    .WithMessage("Nome completo deve ter entre 3 e 256 caracteres");
 
             // ===== VALIDAR FUNÇÃO =====
             RuleFor(x => x.Funcao)

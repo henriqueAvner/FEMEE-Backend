@@ -15,32 +15,32 @@ namespace FEMEE.Application.DTOs.Noticia
         /// <summary>
         /// Título da notícia.
         /// </summary>
-        public string Titulo { get; set; }
+        public string Titulo { get; set; } = null!;
 
         /// <summary>
         /// Slug da notícia.
         /// </summary>
-        public string Slug { get; set; }
+        public string Slug { get; set; } = null!;
 
         /// <summary>
         /// Resumo da notícia.
         /// </summary>
-        public string Resumo { get; set; }
+        public string Resumo { get; set; } = null!;
 
         /// <summary>
         /// Conteúdo completo.
         /// </summary>
-        public string Conteudo { get; set; }
+        public string Conteudo { get; set; } = null!;
 
         /// <summary>
         /// Categoria.
         /// </summary>
-        public string Categoria { get; set; }
+        public string Categoria { get; set; } = null!;
 
         /// <summary>
         /// URL da imagem.
         /// </summary>
-        public string ImagemUrl { get; set; }
+        public string ImagemUrl { get; set; } = null!;
 
         /// <summary>
         /// Data de publicação.
@@ -55,6 +55,6 @@ namespace FEMEE.Application.DTOs.Noticia
         /// <summary>
         /// Informações do autor.
         /// </summary>
-        public UserResponseDto Autor { get; set; }
+        public UserResponseDto Autor { get; set; } = null!;
     }
 }

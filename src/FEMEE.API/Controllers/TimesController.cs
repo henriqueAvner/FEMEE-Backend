@@ -114,7 +114,7 @@ namespace FEMEE.API.Controllers
         /// Atualiza um time.
         /// </summary>
         [HttpPut("{id}")]
-        [Authorize(Policy = "CapitaoOrAdmin")]
+        [Authorize(Policy = "AdminOrCapitao")]
         public async Task<IActionResult> UpdateTime(int id, [FromBody] UpdateTimeDto dto)
         {
             var validationResult = await _updateValidator.ValidateAsync(dto);

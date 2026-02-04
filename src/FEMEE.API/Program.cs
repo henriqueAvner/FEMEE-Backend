@@ -2,8 +2,11 @@ using FEMEE.API.Configuration;
 using FEMEE.API.Middleware;
 using FEMEE.Application.Configurations;
 using FEMEE.Application.DTOs.Auth;
+using FEMEE.Application.DTOs.Campeonato;
+using FEMEE.Application.DTOs.Conquista;
 using FEMEE.Application.DTOs.InscricaoCampeonato;
 using FEMEE.Application.DTOs.Jogador;
+using FEMEE.Application.DTOs.Jogo;
 using FEMEE.Application.DTOs.Noticia;
 using FEMEE.Application.DTOs.Partida;
 using FEMEE.Application.DTOs.Produto;
@@ -15,8 +18,12 @@ using FEMEE.Application.Interfaces.Services;
 using FEMEE.Application.Mappings;
 using FEMEE.Application.Services;
 using FEMEE.Application.Services.Auth;
+using FEMEE.Application.Validators.Auth;
+using FEMEE.Application.Validators.Campeonato;
+using FEMEE.Application.Validators.Conquista;
 using FEMEE.Application.Validators.InscricaoCampeonato;
 using FEMEE.Application.Validators.Jogador;
+using FEMEE.Application.Validators.Jogo;
 using FEMEE.Application.Validators.Noticia;
 using FEMEE.Application.Validators.Partida;
 using FEMEE.Application.Validators.Produto;
@@ -47,6 +54,7 @@ builder.Services.AddDbContext<FemeeDbContext>(options =>
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITimeRepository, TimeRepository>();
 builder.Services.AddScoped<ICampeonatoRepository, CampeonatoRepository>();
 builder.Services.AddScoped<IJogadorRepository, JogadorRepository>();
@@ -61,6 +69,7 @@ builder.Services.AddScoped<IValidator<CreateUserDto>, CreateUserDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateUserDto>, UpdateUserDtoValidator>();
 //Auth
 builder.Services.AddScoped<IValidator<LoginRequest>, LoginRequestValidator>();
+builder.Services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
 //Time
 builder.Services.AddScoped<IValidator<CreateTimeDto>, CreateTimeDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateTimeDto>, UpdateTimeDtoValidator>();
@@ -75,8 +84,19 @@ builder.Services.AddScoped<IValidator<CreateProdutoDto>, CreateProdutoDtoValidat
 builder.Services.AddScoped<IValidator<UpdateProdutoDto>, UpdateProdutoDtoValidator>();
 //InscricaoCampeonato
 builder.Services.AddScoped<IValidator<CreateInscricaoCampeonatoDto>, CreateInscricaoCampeonatoDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateInscricaoCampeonatoDto>, UpdateInscricaoCampeonatoDtoValidator>();
+//Jogo
+builder.Services.AddScoped<IValidator<CreateJogoDto>, CreateJogoDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateJogoDto>, UpdateJogoDtoValidator>();
+//Conquista
+builder.Services.AddScoped<IValidator<CreateConquistaDto>, CreateConquistaDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateConquistaDto>, UpdateConquistaDtoValidator>();
 //Noticia
 builder.Services.AddScoped<IValidator<CreateNoticiaDto>, CreateNoticiaDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateNoticiaDto>, UpdateNoticiaDtoValidator>();
+//Campeonato
+builder.Services.AddScoped<IValidator<CreateCampeonatoDto>, CreateCampeonatoDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateCampeonatoDto>, UpdateCampeonatoDtoValidator>();
 
 // ===== SERVIÇOS =====
 builder.Services.AddScoped<IUserService, UserService>();
@@ -86,7 +106,15 @@ builder.Services.AddScoped<IPartidaService, PartidaService>();
 builder.Services.AddScoped<IJogadorService, JogadorService>();
 builder.Services.AddScoped<INoticiaService, NoticiaService>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddScoped<IJogoService, JogoService>();
+builder.Services.AddScoped<IConquistaService, ConquistaService>();
+builder.Services.AddScoped<IInscricaoCampeonatoService, InscricaoCampeonatoService>();
 
+// ===== SERVIÇOS OPCIONAIS =====
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<ICacheService, MemoryCacheService>();
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+builder.Services.AddScoped<INotificationService, InMemoryNotificationService>();
 
 
 
@@ -138,9 +166,10 @@ try
     builder.Host.UseSerilog();
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
-    // Adicione ao Program.cs ANTES de app.Build()
-
+    
+    // ===== CONFIGURAR SWAGGER COM JWT =====
+    builder.Services.AddSwaggerWithJwt();
+    
     // ===== CONFIGURAR CORS =====
 
     builder.Services.AddCors(options =>

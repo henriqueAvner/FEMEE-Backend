@@ -16,12 +16,12 @@ namespace FEMEE.Application.DTOs.Jogador
         /// <summary>
         /// Nickname do jogador.
         /// </summary>
-        public string NickName { get; set; }
+        public string NickName { get; set; } = null!;
 
         /// <summary>
         /// Nome completo do jogador.
         /// </summary>
-        public string NomeCompleto { get; set; }
+        public string NomeCompleto { get; set; } = null!;
 
         /// <summary>
         /// Função do jogador.
@@ -41,6 +41,6 @@ namespace FEMEE.Application.DTOs.Jogador
         /// <summary>
         /// Informações do usuário associado.
         /// </summary>
-        public UserResponseDto User { get; set; }
+        public UserResponseDto User { get; set; } = null!;
     }
 }

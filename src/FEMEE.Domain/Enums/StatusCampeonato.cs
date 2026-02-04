@@ -6,6 +6,7 @@ namespace FEMEE.Domain.Enums
         Open = 1,
         InProgress = 2,
         Closed = 3,
+        Cancelled = 4
 
     }
 }

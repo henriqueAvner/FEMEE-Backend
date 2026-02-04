@@ -14,26 +14,31 @@ namespace FEMEE.Application.Validators.Jogador
         /// </summary>
         public UpdateJogadorDtoValidator()
         {
-            // ===== VALIDAR NICKNAME =====
+            // ===== VALIDAR NICKNAME (opcional) =====
             RuleFor(x => x.NickName)
-                .NotEmpty()
-                    .WithMessage("Nickname é obrigatório")
                 .Length(3, 50)
                     .WithMessage("Nickname deve ter entre 3 e 50 caracteres")
                 .Matches(@"^[a-zA-Z0-9_-]+$")
-                    .WithMessage("Nickname deve conter apenas letras, números, hífens e underscores");
+                    .WithMessage("Nickname deve conter apenas letras, números, hífens e underscores")
+                .When(x => !string.IsNullOrEmpty(x.NickName));
 
-            // ===== VALIDAR NOME COMPLETO =====
-            RuleFor(x => x.NomeCompleto)
-                .NotEmpty()
-                    .WithMessage("Nome completo é obrigatório")
-                .Length(3, 256)
-                    .WithMessage("Nome completo deve ter entre 3 e 256 caracteres");
-
-            // ===== VALIDAR FUNÇÃO =====
+            // ===== VALIDAR FUNÇÃO (opcional) =====
             RuleFor(x => x.Funcao)
                 .IsInEnum()
-                    .WithMessage("Função inválida");
+                    .WithMessage("Função inválida")
+                .When(x => x.Funcao.HasValue);
+
+            // ===== VALIDAR STATUS (opcional) =====
+            RuleFor(x => x.Status)
+                .IsInEnum()
+                    .WithMessage("Status inválido")
+                .When(x => x.Status.HasValue);
+
+            // ===== VALIDAR TIME ID (opcional) =====
+            RuleFor(x => x.TimeId)
+                .GreaterThan(0)
+                    .WithMessage("ID do time inválido")
+                .When(x => x.TimeId.HasValue);
         }
     }
 }

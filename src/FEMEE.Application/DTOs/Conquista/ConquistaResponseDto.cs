@@ -13,12 +13,12 @@ namespace FEMEE.Application.DTOs.Conquista
         /// <summary>
         /// Título da conquista.
         /// </summary>
-        public string Titulo { get; set; }
+        public string Titulo { get; set; } = null!;
 
         /// <summary>
         /// Descrição da conquista.
         /// </summary>
-        public string Descricao { get; set; }
+        public string Descricao { get; set; } = null!;
 
         /// <summary>
         /// Posição/ranking da conquista.
@@ -33,6 +33,6 @@ namespace FEMEE.Application.DTOs.Conquista
         /// <summary>
         /// URL do ícone/badge.
         /// </summary>
-        public string IconeTitulo { get; set; }
+        public string IconeTitulo { get; set; } = null!;
     }
 }

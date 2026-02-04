@@ -120,8 +120,7 @@ namespace FEMEE.Application.Services
 
                     _logger.LogInformation("Buscando usuário por email: {Email}", email);
 
-                    var users = await _unitOfWork.Users.GetAllAsync();
-                    var user = users.FirstOrDefault(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+                    var user = await _unitOfWork.Users.GetByEmailAsync(email);
 
                     if (user == null)
                     {
@@ -144,6 +143,48 @@ namespace FEMEE.Application.Services
         }
 
         /// <summary>
+        /// Obtém a entidade de domínio `User` pelo email.
+        /// Usado internamente por serviços que necessitam da entidade completa (ex.: autenticação).
+        /// </summary>
+        public async Task<User> GetUserEntityByEmailAsync(string email)
+        {
+            using (StructuredLogging.BeginOperationScope("GetUserEntityByEmail"))
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(email))
+                    {
+                        _logger.LogWarning("Email vazio fornecido");
+                        throw new ArgumentException("Email não pode ser vazio", nameof(email));
+                    }
+
+                    _logger.LogInformation("Buscando entidade de usuário por email: {Email}", email);
+
+                    var user = await _unitOfWork.Users.GetByEmailAsync(email);
+
+                    if (user == null)
+                    {
+                        _logger.LogWarning("Usuário não encontrado: {Email}", email);
+                        throw new KeyNotFoundException($"Usuário com email {email} não encontrado");
+                    }
+
+                    stopwatch.Stop();
+                    _logger.LogInformation("Entidade de usuário encontrada por email em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
+
+                    return user;
+                }
+                catch (Exception ex)
+                {
+                    stopwatch.Stop();
+                    _logger.LogError(ex, "Erro ao buscar entidade de usuário por email em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
         /// Cria um novo usuário.
         /// </summary>
         public async Task<UserResponseDto> CreateUserAsync(CreateUserDto dto)
@@ -159,8 +200,7 @@ namespace FEMEE.Application.Services
                     _logger.LogInformation("Iniciando criação de usuário: {Email}", dto.Email);
 
                     // Verificar se email já existe
-                    var users = await _unitOfWork.Users.GetAllAsync();
-                    if (users.Any(u => u.Email.Equals(dto.Email, StringComparison.OrdinalIgnoreCase)))
+                    if (await _unitOfWork.Users.EmailExistsAsync(dto.Email))
                     {
                         _logger.LogWarning("Email já cadastrado: {Email}", dto.Email);
                         throw new InvalidOperationException("Email já cadastrado");

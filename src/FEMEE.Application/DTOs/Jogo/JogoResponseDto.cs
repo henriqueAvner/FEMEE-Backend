@@ -13,22 +13,22 @@ namespace FEMEE.Application.DTOs.Jogo
         /// <summary>
         /// Nome do jogo.
         /// </summary>
-        public string Nome { get; set; }
+            public string Nome { get; set; } = null!;
 
         /// <summary>
         /// Slug do jogo.
         /// </summary>
-        public string Slug { get; set; }
+            public string Slug { get; set; } = null!;
 
         /// <summary>
         /// Descrição do jogo.
         /// </summary>
-        public string Descricao { get; set; }
+            public string Descricao { get; set; } = null!;
 
         /// <summary>
         /// URL da imagem do jogo.
         /// </summary>
-        public string ImagemUrl { get; set; }
+            public string ImagemUrl { get; set; } = null!;
 
         /// <summary>
         /// Se o jogo está ativo.

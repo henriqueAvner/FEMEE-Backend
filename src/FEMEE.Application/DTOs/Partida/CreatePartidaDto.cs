@@ -29,7 +29,7 @@ namespace FEMEE.Application.DTOs.Partida
         /// <summary>
         /// Local da partida.
         /// </summary>
-        public string Local { get; set; }
+        public string Local { get; set; } = null!;
 
         /// <summary>
         /// Fase da partida (Classificatória, Semifinal, Final, etc).

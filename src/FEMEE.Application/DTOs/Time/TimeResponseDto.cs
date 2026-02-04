@@ -14,22 +14,22 @@ namespace FEMEE.Application.DTOs.Time
         /// <summary>
         /// Nome do time.
         /// </summary>
-        public string Nome { get; set; }
+        public string Nome { get; set; } = null!;
 
         /// <summary>
         /// Slug do time.
         /// </summary>
-        public string Slug { get; set; }
+        public string Slug { get; set; } = null!;
 
         /// <summary>
         /// URL do logo.
         /// </summary>
-        public string LogoUrl { get; set; }
+        public string LogoUrl { get; set; } = null!;
 
         /// <summary>
         /// Descrição do time.
         /// </summary>
-        public string Descricao { get; set; }
+        public string Descricao { get; set; } = null!;
 
         /// <summary>
         /// Número de vitórias.

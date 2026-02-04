@@ -10,7 +10,7 @@ namespace FEMEE.Application.Interfaces.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<User> Users {get;}
+        IUserRepository Users {get;}
         ITimeRepository Times {get;}
 
         IJogadorRepository Jogadores {get;}

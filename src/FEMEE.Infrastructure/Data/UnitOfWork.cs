@@ -17,17 +17,17 @@ namespace FEMEE.Infrastructure.Data
     {
         private readonly FemeeDbContext _context;
 
-        // Repositórios privados (lazy initialization)
-        private IRepository<User> _users;
-        private ITimeRepository _times;
-        private IJogadorRepository _jogadores;
-        private ICampeonatoRepository _campeonatos;
-        private IRepository<Partida> _partidas;
-        private IRepository<Noticia> _noticias;
-        private IRepository<Conquista> _conquistas;
-        private IRepository<Jogo> _jogos;
-        private IRepository<Produto> _produtos;
-        private IRepository<InscricaoCampeonato> _inscricoesCampeonato;
+        // Repositórios privados (lazy initialization - são nullable até serem inicializados)
+        private IUserRepository? _users;
+        private ITimeRepository? _times;
+        private IJogadorRepository? _jogadores;
+        private ICampeonatoRepository? _campeonatos;
+        private IRepository<Partida>? _partidas;
+        private IRepository<Noticia>? _noticias;
+        private IRepository<Conquista>? _conquistas;
+        private IRepository<Jogo>? _jogos;
+        private IRepository<Produto>? _produtos;
+        private IRepository<InscricaoCampeonato>? _inscricoesCampeonato;
 
         public UnitOfWork(FemeeDbContext context)
         {
@@ -37,11 +37,11 @@ namespace FEMEE.Infrastructure.Data
         // ===== PROPRIEDADES DE REPOSITÓRIOS =====
 
         /// <summary>
-        /// Repositório de usuários.
+        /// Repositório especializado de usuários.
         /// Usa lazy initialization: cria apenas quando acessado.
         /// </summary>
-        public IRepository<User> Users
-            => _users ??= new GenericRepository<User>(_context);
+        public IUserRepository Users
+            => _users ??= new UserRepository(_context);
 
         /// <summary>
         /// Repositório especializado de times.

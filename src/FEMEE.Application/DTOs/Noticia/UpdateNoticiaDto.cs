@@ -8,26 +8,26 @@ namespace FEMEE.Application.DTOs.Noticia
         /// <summary>
         /// Novo título.
         /// </summary>
-        public string Titulo { get; set; }
+        public string Titulo { get; set; } = null!;
 
         /// <summary>
         /// Novo resumo.
         /// </summary>
-        public string Resumo { get; set; }
+        public string Resumo { get; set; } = null!;
 
         /// <summary>
         /// Novo conteúdo.
         /// </summary>
-        public string Conteudo { get; set; }
+        public string Conteudo { get; set; } = null!;
 
         /// <summary>
         /// Nova categoria.
         /// </summary>
-        public string Categoria { get; set; }
+        public string Categoria { get; set; } = null!;
 
         /// <summary>
         /// Nova imagem.
         /// </summary>
-        public string ImagemUrl { get; set; }
+        public string ImagemUrl { get; set; } = null!;
     }
 }

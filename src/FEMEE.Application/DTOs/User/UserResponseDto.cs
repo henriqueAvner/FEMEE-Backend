@@ -17,17 +17,17 @@ namespace FEMEE.Application.DTOs.User
         /// <summary>
         /// Nome completo do usuário.
         /// </summary>
-        public string Nome { get; set; }
+        public string Nome { get; set; } = null!;
 
         /// <summary>
         /// Email do usuário.
         /// </summary>
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
 
         /// <summary>
         /// Telefone do usuário.
         /// </summary>
-        public string Telefone { get; set; }
+        public string Telefone { get; set; } = null!;
 
         /// <summary>
         /// Tipo de usuário.
