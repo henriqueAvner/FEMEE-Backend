@@ -1,6 +1,6 @@
 using FEMEE.API.Controllers;
 using FEMEE.Application.DTOs.Partida;
-using FEMEE.Domain.Interfaces;
+using FEMEE.Application.Interfaces.Services;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;

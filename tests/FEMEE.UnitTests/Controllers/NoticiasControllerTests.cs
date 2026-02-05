@@ -178,6 +178,8 @@ namespace FEMEE.UnitTests.Controllers
             var dto = new UpdateNoticiaDto { Titulo = "Updated Noticia" };
             var updated = new NoticiaResponseDto { Id = id, Titulo = dto.Titulo };
 
+            _updateValidatorMock.Setup(x => x.ValidateAsync(dto, default))
+                .ReturnsAsync(new ValidationResult());
             _noticiaServiceMock.Setup(x => x.UpdateNoticiaAsync(id, dto)).ReturnsAsync(updated);
 
             // Act
@@ -196,6 +198,8 @@ namespace FEMEE.UnitTests.Controllers
             var id = 999;
             var dto = new UpdateNoticiaDto { Titulo = "Updated" };
 
+            _updateValidatorMock.Setup(x => x.ValidateAsync(dto, default))
+                .ReturnsAsync(new ValidationResult());
             _noticiaServiceMock.Setup(x => x.UpdateNoticiaAsync(id, dto))
                 .ThrowsAsync(new KeyNotFoundException("Notícia não encontrada"));
 

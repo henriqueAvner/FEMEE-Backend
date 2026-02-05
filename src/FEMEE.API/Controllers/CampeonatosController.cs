@@ -76,6 +76,18 @@ namespace FEMEE.API.Controllers
         }
 
         /// <summary>
+        /// Obtém campeonatos ativos (Open ou InProgress).
+        /// Endpoint utilizado pelo frontend para exibir campeonatos na homepage.
+        /// </summary>
+        [HttpGet("ativos")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCampeonatosAtivos()
+        {
+            var campeonatos = await _campeonatoService.GetCampeonatosAtivosAsync();
+            return Ok(campeonatos);
+        }
+
+        /// <summary>
         /// Cria um novo campeonato.
         /// </summary>
         [HttpPost]

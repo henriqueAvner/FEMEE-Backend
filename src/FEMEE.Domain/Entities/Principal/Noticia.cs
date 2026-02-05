@@ -44,7 +44,7 @@ namespace FEMEE.Domain.Entities.Principal
         [Column("NUMERO_COMENTARIOS")]
         public int NumeroComentarios { get; set; }
         [Column("VISUALIZACOES")]
-        public int Vizualizacoes { get; set; }
+        public int Visualizacoes { get; set; }
         /// <summary>Indica se a notícia está publicada e visível.</summary>
         [Column("PUBLICADA")]
         public bool Publicada { get; set; }

@@ -6,7 +6,6 @@ using FEMEE.Application.Mappings;
 using FEMEE.Application.Services;
 using FEMEE.Domain.Entities.Principal;
 using FEMEE.Domain.Enums;
-using FEMEE.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
 

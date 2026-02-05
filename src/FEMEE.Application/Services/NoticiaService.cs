@@ -4,7 +4,6 @@ using FEMEE.Application.Interfaces.Repositories;
 using FEMEE.Application.Interfaces.Services;
 using FEMEE.Application.Logging;
 using FEMEE.Domain.Entities.Principal;
-using FEMEE.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 

@@ -1,6 +1,6 @@
 using FEMEE.Application.DTOs.Produto;
 
-namespace FEMEE.Domain.Interfaces
+namespace FEMEE.Application.Interfaces.Services
 {
     /// <summary>
     /// Interface para o serviço de produtos.

@@ -1,7 +1,7 @@
 # ========================================
 # STAGE 1: BUILD
 # ========================================
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /app
 
@@ -29,7 +29,7 @@ RUN dotnet publish "src/FEMEE.API/FEMEE.API.csproj" -c Release -o /app/publish -
 # ========================================
 # STAGE 2: RUNTIME
 # ========================================
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 
 WORKDIR /app
 

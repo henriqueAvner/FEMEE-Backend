@@ -2,7 +2,6 @@ using FEMEE.Application.DTOs.Auth;
 using FEMEE.Application.Interfaces.Common;
 using FEMEE.Application.Interfaces.Services;
 using FEMEE.Application.Services.Auth;
-using FEMEE.Domain.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -67,12 +66,17 @@ namespace FEMEE.API.Controllers
 
                 var token = await _authService.GenerateTokenAsync(user);
 
+                // Calcula expiração baseado na configuração (60 minutos por padrão)
+                var expiresAt = DateTime.UtcNow.AddMinutes(60);
+
                 return Ok(new LoginResponse
                 {
                     Token = token,
                     UserId = user.Id,
                     Email = user.Email,
-                    Nome = user.Nome
+                    Nome = user.Nome,
+                    TipoUsuario = user.TipoUsuario,
+                    ExpiresAt = expiresAt
                 });
             }
             catch (KeyNotFoundException)

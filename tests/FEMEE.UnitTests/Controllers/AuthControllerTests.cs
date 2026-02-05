@@ -4,7 +4,6 @@ using FEMEE.Application.DTOs.User;
 using FEMEE.Application.Interfaces.Common;
 using FEMEE.Application.Interfaces.Services;
 using FEMEE.Domain.Entities.Principal;
-using FEMEE.Domain.Interfaces;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;

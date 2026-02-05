@@ -1,6 +1,5 @@
 using FEMEE.Application.DTOs.User;
 using FEMEE.Application.Interfaces.Services;
-using FEMEE.Domain.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

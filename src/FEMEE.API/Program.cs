@@ -29,7 +29,6 @@ using FEMEE.Application.Validators.Partida;
 using FEMEE.Application.Validators.Produto;
 using FEMEE.Application.Validators.Time;
 using FEMEE.Application.Validators.User;
-using FEMEE.Domain.Interfaces;
 using FEMEE.Infrastructure.Data;
 using FEMEE.Infrastructure.Data.Context;
 using FEMEE.Infrastructure.Data.Repositories;
@@ -210,10 +209,6 @@ builder.Services.AddRateLimiter(options =>
     };
 });
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
 var logger = LoggingConfiguration.ConfigureLogging();
 Log.Logger = logger;
 
@@ -260,22 +255,25 @@ try
 
     var app = builder.Build();
 
-    // ===== ADICIONAR MIDDLEWARE DE TRATAMENTO DE ERROS =====
+    // ===== SWAGGER PRIMEIRO (antes dos middlewares customizados) =====
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "FEMEE API v1");
+            c.RoutePrefix = "swagger";
+        });
+    }
 
+    // ===== ADICIONAR MIDDLEWARE DE TRATAMENTO DE ERROS =====
     app.UseMiddleware<ExceptionHandlingMiddleware>();
     app.UseMiddleware<RequestLoggingMiddleware>();
     
     // ===== ADICIONAR RATE LIMITING =====
     app.UseRateLimiter();
     
-    // ===== ADICIONAR MIDDLEWARE DE CORS =====
-
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
-
+    app.UseStaticFiles();
     app.UseCors("AllowFrontend");
     app.UseAuthentication();
     app.UseAuthorization();

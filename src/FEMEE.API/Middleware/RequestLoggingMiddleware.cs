@@ -108,7 +108,9 @@ namespace FEMEE.API.Middleware
                     }
 
                     // ===== COPIAR RESPOSTA PARA STREAM ORIGINAL =====
+                    responseBody.Seek(0, SeekOrigin.Begin);
                     await responseBody.CopyToAsync(originalBodyStream);
+                    context.Response.Body = originalBodyStream;
                 }
             }
         }

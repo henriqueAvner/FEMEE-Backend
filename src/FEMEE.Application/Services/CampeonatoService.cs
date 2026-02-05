@@ -170,6 +170,39 @@ namespace FEMEE.Application.Services
             }
         }
 
+        /// <summary>
+        /// Obtém campeonatos ativos (Open ou InProgress).
+        /// </summary>
+        public async Task<IEnumerable<CampeonatoResponseDto>> GetCampeonatosAtivosAsync()
+        {
+            using (StructuredLogging.BeginOperationScope("GetCampeonatosAtivos"))
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                try
+                {
+                    _logger.LogInformation("Buscando campeonatos ativos (Open ou InProgress)");
+                    var campeonatos = await _unitOfWork.Campeonatos.GetAllAsync();
+                    var ativos = campeonatos
+                        .Where(c => c.Status == StatusCampeonato.Open || c.Status == StatusCampeonato.InProgress)
+                        .OrderByDescending(c => c.DataInicio)
+                        .ToList();
+
+                    stopwatch.Stop();
+                    _logger.LogInformation("Total de campeonatos ativos encontrados: {Count} em {ElapsedMilliseconds}ms",
+                        ativos.Count, stopwatch.ElapsedMilliseconds);
+
+                    return _mapper.Map<IEnumerable<CampeonatoResponseDto>>(ativos);
+                }
+                catch (Exception ex)
+                {
+                    stopwatch.Stop();
+                    _logger.LogError(ex, "Erro ao buscar campeonatos ativos em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
+                    throw;
+                }
+            }
+        }
+
         public async Task<CampeonatoResponseDto> CreateCampeonatoAsync(CreateCampeonatoDto dto)
         {
             using (StructuredLogging.BeginOperationScope("CreateCampeonato"))
