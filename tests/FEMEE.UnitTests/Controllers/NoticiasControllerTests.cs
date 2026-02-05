@@ -13,6 +13,7 @@ namespace FEMEE.UnitTests.Controllers
     {
         private readonly Mock<INoticiaService> _noticiaServiceMock;
         private readonly Mock<IValidator<CreateNoticiaDto>> _createValidatorMock;
+        private readonly Mock<IValidator<UpdateNoticiaDto>> _updateValidatorMock;
         private readonly Mock<ILogger<NoticiasController>> _loggerMock;
         private readonly NoticiasController _controller;
 
@@ -20,11 +21,13 @@ namespace FEMEE.UnitTests.Controllers
         {
             _noticiaServiceMock = new Mock<INoticiaService>();
             _createValidatorMock = new Mock<IValidator<CreateNoticiaDto>>();
+            _updateValidatorMock = new Mock<IValidator<UpdateNoticiaDto>>();
             _loggerMock = new Mock<ILogger<NoticiasController>>();
 
             _controller = new NoticiasController(
                 _noticiaServiceMock.Object,
                 _createValidatorMock.Object,
+                _updateValidatorMock.Object,
                 _loggerMock.Object);
         }
 

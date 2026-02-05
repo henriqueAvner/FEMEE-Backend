@@ -37,10 +37,12 @@ using FEMEE.Infrastructure.Extensions;
 using FEMEE.Infrastructure.Security;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -127,9 +129,9 @@ if (string.IsNullOrWhiteSpace(jwtSettings.SecretKey) || jwtSettings.SecretKey.Le
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-builder.Services.AddScoped<IUserService, UserService>();
+// IUserService já registrado acima - removido duplicação
 builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
-builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>(); // Registra interface + implementação
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddAuthentication(options =>
@@ -152,7 +154,61 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorizationPolicies();
+// AddAuthorizationPolicies() já chamado acima - removido duplicação
+
+// ===== CONFIGURAR RATE LIMITING =====
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    
+    // Política para endpoints de autenticação (mais restritiva)
+    options.AddFixedWindowLimiter("auth", limiter =>
+    {
+        limiter.PermitLimit = 10;           // 10 requisições
+        limiter.Window = TimeSpan.FromMinutes(1); // Por minuto
+        limiter.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiter.QueueLimit = 2;
+    });
+    
+    // Política geral para API (menos restritiva)
+    options.AddFixedWindowLimiter("api", limiter =>
+    {
+        limiter.PermitLimit = 100;          // 100 requisições
+        limiter.Window = TimeSpan.FromMinutes(1); // Por minuto
+        limiter.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiter.QueueLimit = 10;
+    });
+    
+    // Política baseada em IP para proteção geral
+    options.AddPolicy("ip", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 200,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 5
+            }));
+    
+    // Handler customizado para resposta 429
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "application/json";
+        
+        var response = new
+        {
+            error = "TooManyRequests",
+            message = "Você excedeu o limite de requisições. Tente novamente em alguns instantes.",
+            retryAfter = context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter)
+                ? retryAfter.TotalSeconds
+                : 60
+        };
+        
+        await context.HttpContext.Response.WriteAsJsonAsync(response, cancellationToken);
+    };
+});
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -171,36 +227,36 @@ try
     builder.Services.AddSwaggerWithJwt();
     
     // ===== CONFIGURAR CORS =====
+    var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() 
+        ?? new[] { "http://localhost:3000", "http://localhost:5173", "http://localhost:8080" };
 
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("AllowFrontend", policy =>
         {
             policy
-                // Domínios permitidos
-                .WithOrigins(
-                    "https://femee-arena-hub.com",      // Produção
-                    "http://localhost:3000",             // Desenvolvimento local
-                    "http://localhost:5173"              // Vite dev server
-                 )
-                // Métodos HTTP permitidos
+                .WithOrigins(allowedOrigins)
                 .AllowAnyMethod()
-                // Headers permitidos
                 .AllowAnyHeader()
-                // Permitir cookies/credenciais
                 .AllowCredentials();
         });
 
         // Política alternativa para desenvolvimento (menos restritiva)
-        options.AddPolicy("AllowAll", policy =>
+        if (builder.Environment.IsDevelopment())
         {
-            policy
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        }
     });
 
+    // ===== CONFIGURAR HEALTH CHECKS =====
+    builder.Services.AddHealthChecks()
+        .AddDbContextCheck<FemeeDbContext>("database");
 
     var app = builder.Build();
 
@@ -208,6 +264,10 @@ try
 
     app.UseMiddleware<ExceptionHandlingMiddleware>();
     app.UseMiddleware<RequestLoggingMiddleware>();
+    
+    // ===== ADICIONAR RATE LIMITING =====
+    app.UseRateLimiter();
+    
     // ===== ADICIONAR MIDDLEWARE DE CORS =====
 
     if (app.Environment.IsDevelopment())
@@ -220,6 +280,9 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
 
+    // ===== HEALTH CHECKS ENDPOINT =====
+    app.MapHealthChecks("/health");
+    
     app.MapControllers();
     app.Run();
 

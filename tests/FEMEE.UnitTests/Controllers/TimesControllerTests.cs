@@ -103,26 +103,34 @@ namespace FEMEE.UnitTests.Controllers
 
         #endregion
 
-        #region GetAllTimes Tests
+        #region GetTimes Tests
 
         [Fact]
-        public async Task GetAllTimes_ReturnsOkWithTimes()
+        public async Task GetTimes_ReturnsOkWithPagedTimes()
         {
             // Arrange
+            var pagination = new FEMEE.Application.DTOs.Common.PaginationParams { Page = 1, PageSize = 10 };
             var times = new List<TimeResponseDto>
             {
                 new() { Id = 1, Nome = "Team 1", Slug = "team-1" },
                 new() { Id = 2, Nome = "Team 2", Slug = "team-2" }
             };
-            _timeServiceMock.Setup(x => x.GetAllTimesAsync()).ReturnsAsync(times);
+            var pagedResult = new FEMEE.Application.DTOs.Common.PagedResult<TimeResponseDto>
+            {
+                Items = times,
+                TotalCount = 2,
+                Page = 1,
+                PageSize = 10
+            };
+            _timeServiceMock.Setup(x => x.GetTimesPagedAsync(It.IsAny<FEMEE.Application.DTOs.Common.PaginationParams>())).ReturnsAsync(pagedResult);
 
             // Act
-            var result = await _controller.GetAllTimes();
+            var result = await _controller.GetTimes(pagination);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var returnedTimes = Assert.IsType<List<TimeResponseDto>>(okResult.Value);
-            Assert.Equal(2, returnedTimes.Count);
+            var returnedResult = Assert.IsType<FEMEE.Application.DTOs.Common.PagedResult<TimeResponseDto>>(okResult.Value);
+            Assert.Equal(2, returnedResult.Items.Count());
         }
 
         #endregion

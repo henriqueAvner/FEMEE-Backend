@@ -1,3 +1,4 @@
+using FEMEE.Application.DTOs.Common;
 using FEMEE.Application.DTOs.Time;
 
 namespace FEMEE.Application.Interfaces.Services
@@ -17,6 +18,11 @@ namespace FEMEE.Application.Interfaces.Services
         /// Obtém todos os times.
         /// </summary>
         Task<IEnumerable<TimeResponseDto>> GetAllTimesAsync();
+
+        /// <summary>
+        /// Obtém times com paginação.
+        /// </summary>
+        Task<PagedResult<TimeResponseDto>> GetTimesPagedAsync(PaginationParams pagination);
 
         /// <summary>
         /// Obtém um time pelo slug.

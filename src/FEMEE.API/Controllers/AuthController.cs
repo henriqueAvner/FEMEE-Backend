@@ -6,6 +6,7 @@ using FEMEE.Domain.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FEMEE.API.Controllers
 {
@@ -14,6 +15,7 @@ namespace FEMEE.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [EnableRateLimiting("auth")] // Aplica rate limiting mais restritivo para auth
     public class AuthController : ControllerBase
     {
         private readonly IAuthenticationService _authService;

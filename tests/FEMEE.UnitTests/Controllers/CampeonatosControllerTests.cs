@@ -68,26 +68,34 @@ namespace FEMEE.UnitTests.Controllers
 
         #endregion
 
-        #region GetAllCampeonatos Tests
+        #region GetCampeonatos Tests
 
         [Fact]
-        public async Task GetAllCampeonatos_ReturnsOkWithCampeonatos()
+        public async Task GetCampeonatos_ReturnsOkWithPagedCampeonatos()
         {
             // Arrange
+            var pagination = new FEMEE.Application.DTOs.Common.PaginationParams { Page = 1, PageSize = 10 };
             var campeonatos = new List<CampeonatoResponseDto>
             {
                 new() { Id = 1, Titulo = "Campeonato 1" },
                 new() { Id = 2, Titulo = "Campeonato 2" }
             };
-            _campeonatoServiceMock.Setup(x => x.GetAllCampeonatosAsync()).ReturnsAsync(campeonatos);
+            var pagedResult = new FEMEE.Application.DTOs.Common.PagedResult<CampeonatoResponseDto>
+            {
+                Items = campeonatos,
+                TotalCount = 2,
+                Page = 1,
+                PageSize = 10
+            };
+            _campeonatoServiceMock.Setup(x => x.GetCampeonatosPagedAsync(It.IsAny<FEMEE.Application.DTOs.Common.PaginationParams>(), null)).ReturnsAsync(pagedResult);
 
             // Act
-            var result = await _controller.GetAllCampeonatos();
+            var result = await _controller.GetCampeonatos(pagination, null);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var returned = Assert.IsType<List<CampeonatoResponseDto>>(okResult.Value);
-            Assert.Equal(2, returned.Count);
+            var returned = Assert.IsType<FEMEE.Application.DTOs.Common.PagedResult<CampeonatoResponseDto>>(okResult.Value);
+            Assert.Equal(2, returned.Items.Count());
         }
 
         #endregion

@@ -1,4 +1,5 @@
 using FEMEE.Application.DTOs.Campeonato;
+using FEMEE.Application.DTOs.Common;
 using FEMEE.Application.Interfaces.Services;
 using FEMEE.Domain.Enums;
 using FluentValidation;
@@ -32,6 +33,20 @@ namespace FEMEE.API.Controllers
         }
 
         /// <summary>
+        /// Obtém campeonatos com paginação, busca e filtro por status.
+        /// </summary>
+        /// <param name="pagination">Parâmetros de paginação (page, pageSize, search, sortBy, sortDirection)</param>
+        /// <param name="status">Filtro opcional por status do campeonato</param>
+        /// <returns>Lista paginada de campeonatos</returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCampeonatos([FromQuery] PaginationParams pagination, [FromQuery] StatusCampeonato? status = null)
+        {
+            var result = await _campeonatoService.GetCampeonatosPagedAsync(pagination, status);
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Obtém um campeonato pelo ID.
         /// </summary>
         [HttpGet("{id}")]
@@ -50,18 +65,7 @@ namespace FEMEE.API.Controllers
         }
 
         /// <summary>
-        /// Obtém todos os campeonatos.
-        /// </summary>
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetAllCampeonatos()
-        {
-            var campeonatos = await _campeonatoService.GetAllCampeonatosAsync();
-            return Ok(campeonatos);
-        }
-
-        /// <summary>
-        /// Obtém campeonatos por status.
+        /// Obtém campeonatos por status (manter para compatibilidade).
         /// </summary>
         [HttpGet("status/{status}")]
         [AllowAnonymous]

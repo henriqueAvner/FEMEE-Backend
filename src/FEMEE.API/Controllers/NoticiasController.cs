@@ -16,15 +16,18 @@ namespace FEMEE.API.Controllers
     {
         private readonly INoticiaService _noticiaService;
         private readonly IValidator<CreateNoticiaDto> _createValidator;
+        private readonly IValidator<UpdateNoticiaDto> _updateValidator;
         private readonly ILogger<NoticiasController> _logger;
 
         public NoticiasController(
             INoticiaService noticiaService,
             IValidator<CreateNoticiaDto> createValidator,
+            IValidator<UpdateNoticiaDto> updateValidator,
             ILogger<NoticiasController> logger)
         {
             _noticiaService = noticiaService;
             _createValidator = createValidator;
+            _updateValidator = updateValidator;
             _logger = logger;
         }
 
@@ -86,6 +89,10 @@ namespace FEMEE.API.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> UpdateNoticia(int id, [FromBody] UpdateNoticiaDto dto)
         {
+            var validationResult = await _updateValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
             try
             {
                 var noticia = await _noticiaService.UpdateNoticiaAsync(id, dto);

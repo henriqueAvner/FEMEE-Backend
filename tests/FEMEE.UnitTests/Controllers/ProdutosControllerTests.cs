@@ -13,6 +13,7 @@ namespace FEMEE.UnitTests.Controllers
     {
         private readonly Mock<IProdutoService> _produtoServiceMock;
         private readonly Mock<IValidator<CreateProdutoDto>> _createValidatorMock;
+        private readonly Mock<IValidator<UpdateProdutoDto>> _updateValidatorMock;
         private readonly Mock<ILogger<ProdutosController>> _loggerMock;
         private readonly ProdutosController _controller;
 
@@ -20,11 +21,13 @@ namespace FEMEE.UnitTests.Controllers
         {
             _produtoServiceMock = new Mock<IProdutoService>();
             _createValidatorMock = new Mock<IValidator<CreateProdutoDto>>();
+            _updateValidatorMock = new Mock<IValidator<UpdateProdutoDto>>();
             _loggerMock = new Mock<ILogger<ProdutosController>>();
 
             _controller = new ProdutosController(
                 _produtoServiceMock.Object,
                 _createValidatorMock.Object,
+                _updateValidatorMock.Object,
                 _loggerMock.Object);
         }
 

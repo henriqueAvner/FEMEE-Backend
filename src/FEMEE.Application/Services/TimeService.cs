@@ -1,4 +1,5 @@
 using AutoMapper;
+using FEMEE.Application.DTOs.Common;
 using FEMEE.Application.DTOs.Time;
 using FEMEE.Application.Interfaces.Repositories;
 using FEMEE.Application.Interfaces.Services;
@@ -82,6 +83,59 @@ namespace FEMEE.Application.Services
             }
         }
 
+        public async Task<PagedResult<TimeResponseDto>> GetTimesPagedAsync(PaginationParams pagination)
+        {
+            using (StructuredLogging.BeginOperationScope("GetTimesPaged"))
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                try
+                {
+                    _logger.LogInformation("Buscando times paginados. Página: {Page}, Tamanho: {PageSize}",
+                        pagination.Page, pagination.PageSize);
+
+                    var allTimes = await _unitOfWork.Times.GetAllAsync();
+                    var query = allTimes.AsQueryable();
+
+                    // Aplica busca se fornecida
+                    if (!string.IsNullOrWhiteSpace(pagination.Search))
+                    {
+                        query = query.Where(t =>
+                            (t.Nome != null && t.Nome.Contains(pagination.Search, StringComparison.OrdinalIgnoreCase)) ||
+                            (t.Slug != null && t.Slug.Contains(pagination.Search, StringComparison.OrdinalIgnoreCase)));
+                    }
+
+                    // Aplica ordenação
+                    query = pagination.SortBy?.ToLower() switch
+                    {
+                        "nome" => pagination.IsDescending ? query.OrderByDescending(t => t.Nome) : query.OrderBy(t => t.Nome),
+                        "pontos" => pagination.IsDescending ? query.OrderByDescending(t => t.Pontos) : query.OrderBy(t => t.Pontos),
+                        "ranking" => query.OrderByDescending(t => t.Pontos).ThenByDescending(t => t.Vitorias),
+                        _ => query.OrderBy(t => t.Nome)
+                    };
+
+                    var totalCount = query.Count();
+                    var items = query.Skip(pagination.Skip).Take(pagination.PageSize).ToList();
+
+                    stopwatch.Stop();
+                    _logger.LogInformation("Times paginados obtidos em {ElapsedMilliseconds}ms. Total: {TotalCount}",
+                        stopwatch.ElapsedMilliseconds, totalCount);
+
+                    return PagedResult<TimeResponseDto>.Create(
+                        _mapper.Map<IEnumerable<TimeResponseDto>>(items),
+                        totalCount,
+                        pagination.Page,
+                        pagination.PageSize);
+                }
+                catch (Exception ex)
+                {
+                    stopwatch.Stop();
+                    _logger.LogError(ex, "Erro ao buscar times paginados em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
+                    throw;
+                }
+            }
+        }
+
         public async Task<TimeResponseDto> GetTimeBySlugAsync(string slug)
         {
             using (StructuredLogging.BeginOperationScope("GetTimeBySlug"))
@@ -97,8 +151,8 @@ namespace FEMEE.Application.Services
                     }
 
                     _logger.LogInformation("Buscando time por slug: {Slug}", slug);
-                    var times = await _unitOfWork.Times.GetAllAsync();
-                    var time = times.FirstOrDefault(t => t.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase));
+                    // Otimizado: usa query direta ao invés de carregar todos os times
+                    var time = await _unitOfWork.Times.GetBySlugAsync(slug);
 
                     if (time == null)
                     {

@@ -15,15 +15,18 @@ namespace FEMEE.API.Controllers
     {
         private readonly IProdutoService _produtoService;
         private readonly IValidator<CreateProdutoDto> _createValidator;
+        private readonly IValidator<UpdateProdutoDto> _updateValidator;
         private readonly ILogger<ProdutosController> _logger;
 
         public ProdutosController(
             IProdutoService produtoService,
             IValidator<CreateProdutoDto> createValidator,
+            IValidator<UpdateProdutoDto> updateValidator,
             ILogger<ProdutosController> logger)
         {
             _produtoService = produtoService;
             _createValidator = createValidator;
+            _updateValidator = updateValidator;
             _logger = logger;
         }
 
@@ -85,6 +88,10 @@ namespace FEMEE.API.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> UpdateProduto(int id, [FromBody] UpdateProdutoDto dto)
         {
+            var validationResult = await _updateValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
             try
             {
                 var produto = await _produtoService.UpdateProdutoAsync(id, dto);

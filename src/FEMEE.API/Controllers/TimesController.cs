@@ -1,3 +1,4 @@
+using FEMEE.Application.DTOs.Common;
 using FEMEE.Application.DTOs.Time;
 using FEMEE.Application.Interfaces.Services;
 using FluentValidation;
@@ -28,6 +29,19 @@ namespace FEMEE.API.Controllers
             _createValidator = createValidator;
             _updateValidator = updateValidator;
             _logger = logger;
+        }
+
+        /// <summary>
+        /// Obtém times com paginação, busca e ordenação.
+        /// </summary>
+        /// <param name="pagination">Parâmetros de paginação (page, pageSize, search, sortBy, sortDirection)</param>
+        /// <returns>Lista paginada de times</returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetTimes([FromQuery] PaginationParams pagination)
+        {
+            var result = await _timeService.GetTimesPagedAsync(pagination);
+            return Ok(result);
         }
 
         /// <summary>
@@ -64,17 +78,6 @@ namespace FEMEE.API.Controllers
             {
                 return NotFound(ex.Message);
             }
-        }
-
-        /// <summary>
-        /// Obtém todos os times.
-        /// </summary>
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetAllTimes()
-        {
-            var times = await _timeService.GetAllTimesAsync();
-            return Ok(times);
         }
 
         /// <summary>

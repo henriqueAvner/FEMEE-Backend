@@ -130,7 +130,7 @@ namespace FEMEE.API.Controllers
         /// </summary>
         [HttpPost("{id}/finish")]
         [Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> FinishPartida(int id, [FromBody] FinishPartidaRequest request)
+        public async Task<IActionResult> FinishPartida(int id, [FromBody] FinishPartidaRequestDto request)
         {
             try
             {
@@ -160,15 +160,5 @@ namespace FEMEE.API.Controllers
                 return NotFound(ex.Message);
             }
         }
-    }
-
-    /// <summary>
-    /// Request para finalizar uma partida.
-    /// </summary>
-    public class FinishPartidaRequest
-    {
-        public int TimeVencedorId { get; set; }
-        public int PlacarA { get; set; }
-        public int PlacarB { get; set; }
     }
 }

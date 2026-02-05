@@ -3,23 +3,32 @@ using FEMEE.Domain.Entities.Principal;
 using FEMEE.Application.Interfaces.Repositories;
 using FEMEE.Application.Interfaces.Services;
 using FEMEE.Application.Interfaces.Common;
+using FEMEE.Application.Configurations;
+using Microsoft.Extensions.Options;
 
 namespace FEMEE.Application.Services.Auth
 {
-    public class AuthService
+    /// <summary>
+    /// Serviço de autenticação.
+    /// Implementa operações de login, registro e gerenciamento de senha.
+    /// </summary>
+    public class AuthService : IAuthService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAuthenticationService _authenticationService;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly JwtSettings _jwtSettings;
 
         public AuthService(
             IUnitOfWork unitOfWork,
             IAuthenticationService authenticationService,
-            IPasswordHasher passwordHasher)
+            IPasswordHasher passwordHasher,
+            IOptions<JwtSettings> jwtSettings)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
             _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
+            _jwtSettings = jwtSettings?.Value ?? throw new ArgumentNullException(nameof(jwtSettings));
         }
 
         // ===== MÉTODOS PÚBLICOS =====
@@ -40,8 +49,8 @@ namespace FEMEE.Application.Services.Auth
 
             try
             {
-                var users = await _unitOfWork.Users.GetAllAsync();
-                var user = users.FirstOrDefault(u => u.Email == request.Email);
+                // Otimizado: usa query direta ao invés de carregar todos os usuários
+                var user = await _unitOfWork.Users.GetByEmailAsync(request.Email);
 
                 if (user == null)
                     throw new UnauthorizedAccessException("Email ou senha inválidos.");
@@ -51,7 +60,7 @@ namespace FEMEE.Application.Services.Auth
                     throw new UnauthorizedAccessException("Email ou senha inválidos.");
 
                 var token = await _authenticationService.GenerateTokenAsync(user);
-                var expiresAt = DateTime.UtcNow.AddMinutes(60);
+                var expiresAt = DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationMinutes);
 
                 return new LoginResponse
                 {
@@ -60,7 +69,7 @@ namespace FEMEE.Application.Services.Auth
                     Email = user.Email!,
                     Nome = user.Nome!,
                     TipoUsuario = user.TipoUsuario,
-                    ExpiresAt = expiresAt // ou obter de JwtSettings se necessário
+                    ExpiresAt = expiresAt
                 };
             }
             catch (UnauthorizedAccessException)
@@ -103,9 +112,9 @@ namespace FEMEE.Application.Services.Auth
                 throw new ArgumentException("Senha deve ter pelo menos 8 caracteres");
             try
             {
-                // Verificar se email já existe
-                var users = await _unitOfWork.Users.GetAllAsync();
-                if (users.Any(u => u.Email == request.Email))
+                // Otimizado: usa query direta ao invés de carregar todos os usuários
+                var emailExists = await _unitOfWork.Users.EmailExistsAsync(request.Email);
+                if (emailExists)
                     throw new InvalidOperationException("Email já cadastrado");
 
                 // Criar novo usuário
@@ -126,7 +135,7 @@ namespace FEMEE.Application.Services.Auth
                 // Gerar token
                 var token = await _authenticationService.GenerateTokenAsync(user);
 
-                var expiresAt = DateTime.UtcNow.AddMinutes(60);
+                var expiresAt = DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationMinutes);
 
                 return new LoginResponse
                 {

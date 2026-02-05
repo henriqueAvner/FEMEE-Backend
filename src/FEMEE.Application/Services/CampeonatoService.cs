@@ -1,5 +1,6 @@
 using AutoMapper;
 using FEMEE.Application.DTOs.Campeonato;
+using FEMEE.Application.DTOs.Common;
 using FEMEE.Application.Interfaces.Repositories;
 using FEMEE.Application.Interfaces.Services;
 using FEMEE.Application.Logging;
@@ -77,6 +78,66 @@ namespace FEMEE.Application.Services
                 {
                     stopwatch.Stop();
                     _logger.LogError(ex, "Erro ao buscar todos os campeonatos em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
+                    throw;
+                }
+            }
+        }
+
+        public async Task<PagedResult<CampeonatoResponseDto>> GetCampeonatosPagedAsync(PaginationParams pagination, StatusCampeonato? status = null)
+        {
+            using (StructuredLogging.BeginOperationScope("GetCampeonatosPaged"))
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                try
+                {
+                    _logger.LogInformation("Buscando campeonatos paginados. Página: {Page}, Tamanho: {PageSize}, Status: {Status}",
+                        pagination.Page, pagination.PageSize, status?.ToString() ?? "Todos");
+
+                    var allCampeonatos = await _unitOfWork.Campeonatos.GetAllAsync();
+                    var query = allCampeonatos.AsQueryable();
+
+                    // Filtra por status se fornecido
+                    if (status.HasValue)
+                    {
+                        query = query.Where(c => c.Status == status.Value);
+                    }
+
+                    // Aplica busca se fornecida
+                    if (!string.IsNullOrWhiteSpace(pagination.Search))
+                    {
+                        query = query.Where(c =>
+                            (c.Titulo != null && c.Titulo.Contains(pagination.Search, StringComparison.OrdinalIgnoreCase)) ||
+                            (c.Descricao != null && c.Descricao.Contains(pagination.Search, StringComparison.OrdinalIgnoreCase)));
+                    }
+
+                    // Aplica ordenação
+                    query = pagination.SortBy?.ToLower() switch
+                    {
+                        "titulo" => pagination.IsDescending ? query.OrderByDescending(c => c.Titulo) : query.OrderBy(c => c.Titulo),
+                        "nome" => pagination.IsDescending ? query.OrderByDescending(c => c.Titulo) : query.OrderBy(c => c.Titulo),
+                        "datainicio" => pagination.IsDescending ? query.OrderByDescending(c => c.DataInicio) : query.OrderBy(c => c.DataInicio),
+                        "status" => pagination.IsDescending ? query.OrderByDescending(c => c.Status) : query.OrderBy(c => c.Status),
+                        _ => query.OrderByDescending(c => c.DataInicio)
+                    };
+
+                    var totalCount = query.Count();
+                    var items = query.Skip(pagination.Skip).Take(pagination.PageSize).ToList();
+
+                    stopwatch.Stop();
+                    _logger.LogInformation("Campeonatos paginados obtidos em {ElapsedMilliseconds}ms. Total: {TotalCount}",
+                        stopwatch.ElapsedMilliseconds, totalCount);
+
+                    return PagedResult<CampeonatoResponseDto>.Create(
+                        _mapper.Map<IEnumerable<CampeonatoResponseDto>>(items),
+                        totalCount,
+                        pagination.Page,
+                        pagination.PageSize);
+                }
+                catch (Exception ex)
+                {
+                    stopwatch.Stop();
+                    _logger.LogError(ex, "Erro ao buscar campeonatos paginados em {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
                     throw;
                 }
             }
